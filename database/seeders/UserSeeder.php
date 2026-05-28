@@ -17,12 +17,46 @@ class UserSeeder extends Seeder
    public function run()
    {
        $faker = \Faker\Factory::create();
-        // Lặp 5 lần để tạo 5 user giả
+       
+       // Tạo 1 admin
+       User::create([
+           'fullname' => 'Admin User',
+           'email' => 'admin@gmail.com',
+           'password' => bcrypt('password'),
+           'role' => 'admin',
+           'phone' => '0123456789'
+       ]);
+
+       // Tạo 2 consultant
+       foreach (range(1, 2) as $index) {
+           User::create([
+               'fullname' => $faker->name,
+               'email' => 'consultant' . $index . '@gmail.com',
+               'password' => bcrypt('password'),
+               'role' => 'consultant',
+               'phone' => $faker->phoneNumber
+           ]);
+       }
+
+       // Tạo 5 giáo viên
        foreach (range(1, 5) as $index) {
            User::create([
-               'fullname' => $faker->userName,
-               'email' => $faker->email,
-               'password' => bcrypt('secret')
+               'fullname' => $faker->name,
+               'email' => 'teacher' . $index . '@gmail.com',
+               'password' => bcrypt('password'),
+               'role' => 'teacher',
+               'phone' => $faker->phoneNumber
+           ]);
+       }
+
+       // Tạo 10 học sinh
+       foreach (range(1, 10) as $index) {
+           User::create([
+               'fullname' => $faker->name,
+               'email' => 'student' . $index . '@gmail.com',
+               'password' => bcrypt('password'),
+               'role' => 'student',
+               'phone' => $faker->phoneNumber
            ]);
        }
    }

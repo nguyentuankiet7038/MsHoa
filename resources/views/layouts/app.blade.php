@@ -59,7 +59,7 @@
                 </div>
                 <button class="material-symbols-outlined text-on-surface-variant">notifications</button>
                 <button class="material-symbols-outlined text-on-surface-variant">account_circle</button>
-                <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold hover:opacity-80 transition-all">Login</button>
+                <a href="/login" type="button" class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold hover:opacity-80 transition-all">Login</a>
             </div>
         </nav>
     </header>

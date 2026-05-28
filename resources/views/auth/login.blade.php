@@ -3,6 +3,14 @@
 @section('title', 'Login')
 
 @section('content')
+@if($errors->any())
+    <div style="background: red; color: white; padding: 10px;">
+        Hệ thống đang có lỗi: 
+        @foreach($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
 <style>
     .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -32,7 +40,7 @@
 
         <!-- Bắt đầu form đăng nhập Laravel -->
         <form class="space-y-5" method="POST" action="/login">
-            @csrf <!-- BẢO MẬT BẮT BUỘC CỦA LARAVEL -->
+            @csrf <!-- BẢO MẬT BẮT BUỘC CỦA LARAVEL (tạo token nhận diện form) -->
 
             <div class="space-y-1.5">
                 <label class="text-sm font-medium text-on-surface-variant block ml-1" for="email">Email Address</label>
@@ -59,12 +67,12 @@
                 </div>
                 
                 <!-- Báo lỗi động từ Laravel Controller -->
-                @if ($errors->any())
+                @error('err')
                     <div class="text-red-500 text-xs mt-1 flex items-center gap-1">
                         <span class="material-symbols-outlined text-[14px]">error</span> 
-                        {{ $errors->first() }}
+                        {{ $message }}
                     </div>
-                @endif
+                @enderror
             </div>
 
             <button class="w-full py-3.5 bg-brand-turquoise hover:bg-opacity-90 text-white font-bold rounded-lg shadow-lg shadow-brand-turquoise/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4" type="submit">
@@ -99,7 +107,7 @@
         <div class="mt-8 text-center">
             <p class="text-on-surface-variant text-sm">
                 New to Ms. Hoa English? 
-                <a class="text-primary font-bold hover:underline ml-1" href="#">Register Now</a>
+                <a class="text-primary font-bold hover:underline ml-1" href="/register">Register Now</a>
             </p>
         </div>
     </div>

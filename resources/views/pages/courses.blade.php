@@ -61,6 +61,7 @@
     <section class="py-12 px-6 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <!-- Course Card 1 -->
+            @foreach ($courses as $course)
             <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
                 <div class="relative h-48 overflow-hidden">
                     <img alt="TOEIC Mastery" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A professional, high-energy classroom setting with a diverse group of students engaged in learning English. The environment is modern with clean white walls and turquoise accent furniture, illuminated by bright natural sunlight coming through a window. A friendly female teacher is explaining concepts on a digital whiteboard, embodying a modern and sophisticated light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuYpeSfpZYg9QK3PKO5avVjTYJLF7DtFSaIiIH4EELnNoJJ3qrs3C4eGGFP0D-b9Iq1xmrXH6OrelmNOnDjuxLkp-s3fMcyKnrDkiZjMCWeYKLjp9RbCJ3pFTxK5nuB404lD6p3J7VXoshUCXrnrDGKK0wdgK6BEUnSb-COZH8mcs2L9W0TillbMbjHjC1GHFvU9UEOpmo7hYa0RBx7M6qc-jUJ0-MGeWVi2XVT9A7L72nbilYAz2cbIQpYu8BVP8TjjyA49R5gHQ" />
@@ -68,7 +69,7 @@
                     <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">TOEIC</div>
                 </div>
                 <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">TOEIC Mastery 750+</h3>
+                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">{{$course->coursename}}</h3>
                     <div class="flex flex-wrap gap-2 mb-4">
                         <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
                             <span class="material-symbols-outlined text-[14px]">schedule</span> 6 Tháng
@@ -82,16 +83,17 @@
                     </div>
                     <div class="mt-auto">
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">5.500.000đ</span>
-                            <span class="text-sm text-outline line-through">7.200.000đ</span>
+                            <span class="text-xl font-black text-on-surface">{{$course->price}}</span>
+                            <span class="text-sm text-outline line-through">{{$course->price*1.2}}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
+                            <a class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors" type="button" href="{{route('courses.show', $course->courseid)}}">Chi tiết</a>
                             <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
             <!-- Course Card 2 -->
             <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
                 <div class="relative h-48 overflow-hidden">

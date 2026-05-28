@@ -73,6 +73,7 @@ module.exports = {
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
+        "./resources/**/*.vue",
     ],
 
     darkMode: "class",
@@ -85,7 +86,7 @@ module.exports = {
                 DEFAULT: "0.125rem",
                 lg: "0.25rem",
                 xl: "0.5rem",
-                full: "0.75rem",
+                full: "9999px",
             },
 
             fontFamily: {
@@ -99,3 +100,4 @@ module.exports = {
 
     plugins: [],
 };
+
