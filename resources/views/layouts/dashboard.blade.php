@@ -31,11 +31,11 @@
 <span class="material-symbols-outlined mr-3">person</span>
 <span class="font-body text-label-medium">Teachers List</span>
 </a>
-<a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="#">
+<a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="{{route('marketing.admin')}}">
 <span class="material-symbols-outlined mr-3">mail</span>
 <span class="font-body text-label-medium">Marketing</span>
 </a>
-<a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="#">
+<a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="{{route('payment.admin')}}">
 <span class="material-symbols-outlined mr-3">payments</span>
 <span class="font-body text-label-medium">Payments</span>
 </a>

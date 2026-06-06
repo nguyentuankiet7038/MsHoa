@@ -8,6 +8,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,16 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
+
+    //marketing
+    Route::get('/marketing', [MarketingController::class, 'index'])->name('marketing.admin');
+
+    //payment
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.admin');
+    Route::get('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment', [PaymentController::class, 'store'])->name('payment.store');
+    Route::get('/payment/{id}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::get('/payment/export/csv', [PaymentController::class, 'exportCSV'])->name('payment.export');
 });
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
