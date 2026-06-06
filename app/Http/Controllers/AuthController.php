@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; //
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Firebase\JWT\JWT;
 
 class AuthController extends Controller
 {
@@ -19,6 +20,7 @@ class AuthController extends Controller
     // xử lý user bấm nút đăng nhập
     public function login(Request $request)
     {
+        
         //Kiểm tra dữ liệu người dùng nhập
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -27,9 +29,12 @@ class AuthController extends Controller
 
         //dùng Auth::attemp để so sanh database
         if (Auth::attempt($credentials)) {
+           
             // Đăng nhập thành công tạo sesion chuyển hướng
             $request->session()->regenerate();
+            
             return redirect()->intended('/')->with('success', 'Đăng nhập thành công');
+           
         }
 
         // đăng nhập thất bại

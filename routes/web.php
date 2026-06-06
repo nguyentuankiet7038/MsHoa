@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +33,31 @@ Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard'
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register.get');
 Route::get('/login',[AuthController::class, 'showLogin'])->name('login');
 
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/courses', [CourseController::class, 'admincourses'])->name('admin.courses');
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('admin.courses.create');
+    Route::post('/courses', [CourseController::class, 'store'])->name('admin.courses.store');
+    Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('admin.courses.edit');
+    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('admin.courses.update');
+    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('admin.courses.destroy');
 
+    // Teachers
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('admin.teachers.index');
+    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
+    Route::post('/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store');
+    Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
+    Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('admin.teachers.update');
+    Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
+
+    // Students
+    Route::get('/students', [StudentController::class, 'index'])->name('admin.students.index');
+    Route::get('/students/create', [StudentController::class, 'create'])->name('admin.students.create');
+    Route::post('/students', [StudentController::class, 'store'])->name('admin.students.store');
+    Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('admin.students.edit');
+    Route::put('/students/{id}', [StudentController::class, 'update'])->name('admin.students.update');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
+});
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
