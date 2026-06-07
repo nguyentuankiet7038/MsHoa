@@ -18,9 +18,33 @@ class CourseController extends Controller
         return view('pages.course-detail', compact('course'));
     }
 
-    public function admincourses() {
-        $courses = Course::paginate(10);
-        return view('admin.courses.courses', compact('courses'));
+    public function admincourses(Request $request) {
+        $query = Course::query();
+
+        // Filtering
+        if ($request->has('search') && $request->search != '') {
+            $query->where('coursename', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('level') && $request->level != 'All') {
+            $query->where('level', $request->level);
+        }
+
+        if ($request->has('status') && $request->status != 'All') {
+            $query->where('status', $request->status);
+        }
+
+        $courses = $query->paginate(10)->withQueryString();
+
+        // Statistics
+        $stats = [
+            'total' => Course::count(),
+            'active' => Course::where('status', 'Active')->count(),
+            'toeic' => Course::where('coursename', 'like', '%TOEIC%')->count(),
+            'ielts' => Course::where('coursename', 'like', '%IELTS%')->count(),
+        ];
+
+        return view('admin.courses.courses', compact('courses', 'stats'));
     }
 
     public function create() {

@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             RegistrationCourseSeeder::class,
             EnrollmentSeeder::class,
             PaymentSeeder::class,
+            MarketingCampaignSeeder::class,
+            MarketingTemplateSeeder::class,
         ]);
     }
 }

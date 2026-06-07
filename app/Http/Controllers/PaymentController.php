@@ -32,7 +32,7 @@ class PaymentController extends Controller
             $query->whereDate('paymentdate', $request->date);
         }
 
-        $payments = $query->latest()->get();
+        $payments = $query->latest()->paginate(10)->withQueryString();
         return view('admin.payment.index', compact('payments'));
     }
 

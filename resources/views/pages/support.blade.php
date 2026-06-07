@@ -36,31 +36,15 @@
 <h2 class="text-xl font-bold">Frequently Asked Questions</h2>
 </div>
 <div class="space-y-4">
-<div class="group border-b border-outline-variant pb-4 cursor-pointer">
+@foreach($faqs as $faq)
+<div class="group border-b border-outline-variant pb-4 cursor-pointer" onclick="this.querySelector('.faq-answer').classList.toggle('hidden')">
 <div class="flex justify-between items-center group-hover:text-primary">
-<span class="font-semibold">How do I enroll in a new course?</span>
+<span class="font-semibold">{{ $faq->question }}</span>
 <span class="material-symbols-outlined">expand_more</span>
 </div>
-<div class="mt-2 text-on-surface-variant text-sm hidden">You can enroll directly through the Courses dashboard or contact a consultant for a personalized learning path evaluation.</div>
+<div class="mt-2 text-on-surface-variant text-sm faq-answer hidden">{{ $faq->answer }}</div>
 </div>
-<div class="group border-b border-outline-variant pb-4 cursor-pointer">
-<div class="flex justify-between items-center group-hover:text-primary">
-<span class="font-semibold">What is the refund policy?</span>
-<span class="material-symbols-outlined">expand_more</span>
-</div>
-</div>
-<div class="group border-b border-outline-variant pb-4 cursor-pointer">
-<div class="flex justify-between items-center group-hover:text-primary">
-<span class="font-semibold">Can I change my class schedule?</span>
-<span class="material-symbols-outlined">expand_more</span>
-</div>
-</div>
-<div class="group border-b border-outline-variant pb-4 cursor-pointer">
-<div class="flex justify-between items-center group-hover:text-primary">
-<span class="font-semibold">How to access lesson recordings?</span>
-<span class="material-symbols-outlined">expand_more</span>
-</div>
-</div>
+@endforeach
 </div>
 <button class="mt-6 text-primary font-bold text-sm hover:underline flex items-center gap-1">
                         View all 50+ topics
@@ -165,11 +149,8 @@
 <!-- Chat Input Area -->
 <div class="p-4 bg-white border-t border-outline-variant">
 <div class="relative flex items-center bg-surface-container-high rounded-2xl p-2">
-<button class="p-1 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">add_circle</span>
-</button>
-<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-1" placeholder="Type a message..." type="text"/>
-<button class="p-2 support-bg-accent text-white rounded-xl shadow-md">
+<input id="chat-input" class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-1" placeholder="Type a message..." type="text"/>
+<button id="send-btn" class="p-2 support-bg-accent text-white rounded-xl shadow-md">
 <span class="material-symbols-outlined">send</span>
 </button>
 </div>
@@ -182,4 +163,81 @@
 </div>
 </main>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const messagesArea = document.querySelector('.flex-1.overflow-y-auto.p-4.space-y-4');
+    const typingIndicator = document.querySelector('.flex.gap-2.items-center.text-outline.italic.text-xs');
+
+    function appendMessage(role, text) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let html = '';
+        if (role === 'user') {
+            html = `
+                <div class="flex flex-row-reverse gap-2 max-w-[85%] ml-auto">
+                    <div class="support-bg-accent p-3 rounded-2xl rounded-tr-none text-sm text-white">
+                        ${text}
+                        <span class="block text-[10px] opacity-70 mt-1 text-right">${time}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            html = `
+                <div class="flex gap-2 max-w-[85%]">
+                    <div class="flex-shrink-0">
+                        <img class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-wyOJG0KdhPrVQTkFLCgJ5_mrQid2tV-a6hrVhFkrPMgoTgZaBKo9ZjxCC6shMwrTOUtsKVoxG-yXPrGTbCPSbeWqangaLXDZBkcLsHu3_hIfiG52cwAT1qY0TsXiq0VXGCIQlNO2ftNvUq1C5j1DgS-xQnTNDJtEVYLDWGNnFnZEa6LiJXtQw7-EdgQcxi2Ne9aPFZ-z3UcuWSvhxwzS9h5RFiF8K7Re_5XOi7AjdMZ6hjhGIkIfW5qSqyeLUS0s2ekpPy_r5Vw"/>
+                    </div>
+                    <div class="bg-surface-container p-3 rounded-2xl rounded-tl-none text-sm text-on-surface">
+                        ${text}
+                        <span class="block text-[10px] text-outline mt-1">${time}</span>
+                    </div>
+                </div>
+            `;
+        }
+        typingIndicator.insertAdjacentHTML('beforebegin', html);
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        appendMessage('user', message);
+        chatInput.value = '';
+        typingIndicator.classList.remove('hidden');
+
+        try {
+            const response = await fetch('{{ route('support.chat') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            typingIndicator.classList.add('hidden');
+
+            if (data.reply) {
+                appendMessage('agent', data.reply);
+            } else if (data.error) {
+                appendMessage('agent', 'Lỗi: ' + data.error);
+            }
+        } catch (error) {
+            typingIndicator.classList.add('hidden');
+            appendMessage('agent', 'Có lỗi xảy ra khi kết nối với AI.');
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    // Hide typing indicator initially if needed
+    typingIndicator.classList.add('hidden');
+});
+</script>
 @endsection

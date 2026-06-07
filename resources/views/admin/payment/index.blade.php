@@ -294,18 +294,10 @@
 </table>
 </div>
 <!-- Pagination -->
-<div class="px-6 py-4 bg-surface-container-low flex justify-between items-center border-t border-outline-variant">
-<span class="text-xs text-on-surface-variant font-medium">Hiển thị {{ $payments->count() }} hóa đơn</span>
-<div class="flex items-center gap-2">
-<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface transition-all text-on-surface-variant">
-<span class="material-symbols-outlined text-sm">chevron_left</span>
-</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold text-xs">1</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface transition-all text-xs">2</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface transition-all text-xs">3</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface transition-all text-on-surface-variant">
-<span class="material-symbols-outlined text-sm">chevron_right</span>
-</button>
+<div class="px-6 py-4 bg-surface-container-low flex flex-col md:flex-row justify-between items-center border-t border-outline-variant gap-4">
+<span class="text-xs text-on-surface-variant font-medium">Hiển thị {{ $payments->firstItem() ?? 0 }} đến {{ $payments->lastItem() ?? 0 }} của {{ $payments->total() }} hóa đơn</span>
+<div class="pagination-links">
+    {{ $payments->links() }}
 </div>
 </div>
 </div>

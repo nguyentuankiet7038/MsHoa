@@ -102,30 +102,43 @@
             <!-- Bento Filter & Grid -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
                 <!-- Filter Section -->
-                <div class="md:col-span-12 lg:col-span-4 bg-surface-container p-6 rounded-full flex flex-col justify-center border border-outline-variant">
+                <form action="{{ route('admin.courses') }}" method="GET" class="md:col-span-12 lg:col-span-4 bg-surface-container p-6 rounded-3xl flex flex-col justify-center border border-outline-variant">
                     <div class="flex items-center justify-between mb-4">
-                        <span class="font-bold text-on-surface">Quick Filters</span>
-                        <span class="material-symbols-outlined text-outline">tune</span>
+                        <span class="font-bold text-on-surface">Filters</span>
+                        <button type="submit" class="material-symbols-outlined text-primary">search</button>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button class="px-4 py-1.5 bg-primary text-on-primary rounded-full text-sm font-medium">All</button>
-                        <button class="px-4 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium border border-outline-variant hover:bg-surface-variant">TOEIC</button>
-                        <button class="px-4 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium border border-outline-variant hover:bg-surface-variant">IELTS</button>
-                        <button class="px-4 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium border border-outline-variant hover:bg-surface-variant">Communication</button>
+                    <div class="space-y-4">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search courses..." class="w-full rounded-full border-outline-variant bg-surface text-sm focus:ring-primary focus:border-primary">
+                        <div class="flex flex-wrap gap-2">
+                            <select name="level" class="text-xs rounded-full border-outline-variant bg-surface py-1">
+                                <option value="All">All Levels</option>
+                                <option value="Beginner" {{ request('level') == 'Beginner' ? 'selected' : '' }}>Beginner</option>
+                                <option value="Intermediate" {{ request('level') == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                <option value="Advanced" {{ request('level') == 'Advanced' ? 'selected' : '' }}>Advanced</option>
+                            </select>
+                            <select name="status" class="text-xs rounded-full border-outline-variant bg-surface py-1">
+                                <option value="All">All Status</option>
+                                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                            <a href="{{ route('admin.courses') }}" class="text-xs text-on-surface-variant hover:text-primary underline flex items-center">Reset</a>
+                        </div>
                     </div>
-                </div>
+                </form>
                 <!-- Stats/Briefing -->
-                <div class="md:col-span-6 lg:col-span-4 bg-primary-container text-on-primary-container p-6 rounded-full flex items-center justify-between border border-primary">
+                <div class="md:col-span-6 lg:col-span-4 bg-primary-container text-on-primary-container p-6 rounded-3xl flex items-center justify-between border border-primary">
                     <div>
                         <p class="text-sm font-medium opacity-80 uppercase tracking-widest">Active Courses</p>
-                        <p class="text-4xl font-black">24</p>
+                        <p class="text-4xl font-black">{{ $stats['active'] }}</p>
+                        <p class="text-xs opacity-70">Total: {{ $stats['total'] }}</p>
                     </div>
                     <span class="material-symbols-outlined text-5xl opacity-40">school</span>
                 </div>
-                <div class="md:col-span-6 lg:col-span-4 bg-tertiary-container text-on-tertiary-container p-6 rounded-full flex items-center justify-between border border-tertiary">
+                <div class="md:col-span-6 lg:col-span-4 bg-tertiary-container text-on-tertiary-container p-6 rounded-3xl flex items-center justify-between border border-tertiary">
                     <div>
-                        <p class="text-sm font-medium opacity-80 uppercase tracking-widest">Enrollment Growth</p>
-                        <p class="text-4xl font-black">+18%</p>
+                        <p class="text-sm font-medium opacity-80 uppercase tracking-widest">TOEIC & IELTS</p>
+                        <p class="text-4xl font-black">{{ $stats['toeic'] + $stats['ielts'] }}</p>
+                        <p class="text-xs opacity-70">T: {{ $stats['toeic'] }} | I: {{ $stats['ielts'] }}</p>
                     </div>
                     <span class="material-symbols-outlined text-5xl opacity-40">trending_up</span>
                 </div>
@@ -196,18 +209,12 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
-                    <p class="text-sm text-on-surface-variant">Showing 1 to 4 of 24 courses</p>
-                    <div class="flex gap-2">
-                        <button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-high text-on-surface-variant disabled:opacity-50" disabled="">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <button class="w-10 h-10 bg-primary text-on-primary rounded-lg font-bold">1</button>
-                        <button class="w-10 h-10 border border-outline-variant rounded-lg hover:bg-surface-container-high text-on-surface">2</button>
-                        <button class="w-10 h-10 border border-outline-variant rounded-lg hover:bg-surface-container-high text-on-surface">3</button>
-                        <button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-high text-on-surface">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </button>
+                <div class="px-6 py-4 bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-sm text-on-surface-variant">
+                        Showing {{ $courses->firstItem() ?? 0 }} to {{ $courses->lastItem() ?? 0 }} of {{ $courses->total() }} courses
+                    </p>
+                    <div class="pagination-links">
+                        {{ $courses->links() }}
                     </div>
                 </div>
             </div>
