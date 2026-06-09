@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-surface">
     <!-- SideNavBar -->
     <aside class="hidden lg:flex flex-col w-64 h-screen fixed left-0 top-0 pt-20 pb-4 bg-surface-container-low border-r border-outline-variant z-40">
         <div class="px-6 mb-8">
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <nav class="flex-1 space-y-1">
+        <nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
             <a class="flex items-center {{ request()->routeIs('dashboard') ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant' }} rounded-xl font-bold px-4 py-3 mx-2 transition-transform active:scale-95" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined mr-3">dashboard</span>
                 <span class="font-body text-label-medium">Overview</span>
@@ -31,6 +31,14 @@
                 <span class="material-symbols-outlined mr-3">person</span>
                 <span class="font-body text-label-medium">Teachers List</span>
             </a>
+            <a class="flex items-center {{ request()->routeIs('admin.registrations.*') ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="{{ route('admin.registrations.index') }}">
+                <span class="material-symbols-outlined mr-3">how_to_reg</span>
+                <span class="font-body text-label-medium">Registrations</span>
+            </a>
+            <a class="flex items-center {{ request()->routeIs('admin.classes.*') ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="{{ route('admin.classes.index') }}">
+                <span class="material-symbols-outlined mr-3">class</span>
+                <span class="font-body text-label-medium">Classes</span>
+            </a>
             <a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-transform active:scale-95" href="{{route('marketing.admin')}}">
                 <span class="material-symbols-outlined mr-3">mail</span>
                 <span class="font-body text-label-medium">Marketing</span>
@@ -44,8 +52,8 @@
                 <span class="font-body text-label-medium">Help Center</span>
             </a>
         </nav>
-        <div class="px-4 mb-6">
-            <button class="w-full bg-primary text-on-primary py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+        <div class="px-4 mb-6 mt-4">
+            <button class="w-full bg-primary text-on-primary py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-md">
                 <span class="material-symbols-outlined text-sm">add</span>
                 New Campaign
             </button>
@@ -61,8 +69,16 @@
             </a>
         </div>
     </aside>
-    <!-- Main Canvas -->
 
-    @yield('contentdashboard')
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow lg:ml-64 min-w-0">
+        @yield('contentdashboard')
+    </div>
 </div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e6e0e9; border-radius: 10px; }
+</style>
 @endsection

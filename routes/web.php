@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\TeacherController;
@@ -87,6 +88,33 @@ Route::prefix('dashboard')->group(function () {
 
     //help-center
     Route::get('/help-center', [HelpCenterController::class, 'index'])->name('admin.help-center.index');
+
+    // Registrations
+    Route::prefix('registrations')->group(function () {
+        Route::get('/', [EnrollmentController::class, 'index'])->name('admin.registrations.index');
+        Route::get('/{id}/edit', [EnrollmentController::class, 'edit'])->name('admin.registrations.edit');
+        Route::put('/{id}', [EnrollmentController::class, 'update'])->name('admin.registrations.update');
+        Route::delete('/{id}', [EnrollmentController::class, 'destroy'])->name('admin.registrations.destroy');
+    });
+
+    // Classes
+    Route::prefix('classes')->group(function () {
+        Route::get('/', [ClassesController::class, 'index'])->name('admin.classes.index');
+        Route::get('/create', [ClassesController::class, 'create'])->name('admin.classes.create');
+        Route::post('/', [ClassesController::class, 'store'])->name('admin.classes.store');
+        Route::get('/{id}', [ClassesController::class, 'show'])->name('admin.classes.show');
+        Route::get('/{id}/edit', [ClassesController::class, 'edit'])->name('admin.classes.edit');
+        Route::put('/{id}', [ClassesController::class, 'update'])->name('admin.classes.update');
+        Route::delete('/{id}', [ClassesController::class, 'destroy'])->name('admin.classes.destroy');
+        
+        // Export
+        Route::get('/{id}/export', [ClassesController::class, 'exportExcel'])->name('admin.classes.export');
+        
+        // AJAX & Logic
+        Route::get('/get-students', [ClassesController::class, 'getAvailableStudents'])->name('admin.classes.getStudents');
+        Route::get('/get-teachers', [ClassesController::class, 'getAvailableTeachers'])->name('admin.classes.getTeachers');
+        Route::post('/auto-arrange', [ClassesController::class, 'autoArrange'])->name('admin.classes.autoArrange');
+    });
 });
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

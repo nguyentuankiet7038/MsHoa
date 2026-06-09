@@ -14,40 +14,40 @@
                     <div class="p-2 bg-primary-container rounded-xl text-on-primary-container">
                         <span class="material-symbols-outlined">group</span>
                     </div>
-                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">+12%</span>
+                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">Total</span>
                 </div>
                 <h3 class="text-on-surface-variant text-sm font-medium">Total Students</h3>
-                <p class="text-2xl font-black text-on-surface mt-1">2,482</p>
+                <p class="text-2xl font-black text-on-surface mt-1">{{ number_format($totalStudents) }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-2 bg-secondary-container rounded-xl text-on-secondary-container">
                         <span class="material-symbols-outlined">menu_book</span>
                     </div>
-                    <span class="text-xs font-bold text-on-secondary-fixed-variant bg-secondary-fixed px-2 py-1 rounded-full">48 Active</span>
+                    <span class="text-xs font-bold text-on-secondary-fixed-variant bg-secondary-fixed px-2 py-1 rounded-full">{{ $activeCourses }} Active</span>
                 </div>
                 <h3 class="text-on-surface-variant text-sm font-medium">Active Courses</h3>
-                <p class="text-2xl font-black text-on-surface mt-1">156</p>
+                <p class="text-2xl font-black text-on-surface mt-1">{{ $activeCourses }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-2 bg-tertiary-container rounded-xl text-on-tertiary-container">
                         <span class="material-symbols-outlined">payments</span>
                     </div>
-                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">+8.4%</span>
+                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">This Month</span>
                 </div>
                 <h3 class="text-on-surface-variant text-sm font-medium">Monthly Revenue</h3>
-                <p class="text-2xl font-black text-on-surface mt-1">$42,500</p>
+                <p class="text-2xl font-black text-on-surface mt-1">${{ number_format($monthlyRevenue) }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-2 bg-error-container rounded-xl text-on-error-container">
-                        <span class="material-symbols-outlined">support_agent</span>
+                        <span class="material-symbols-outlined">how_to_reg</span>
                     </div>
-                    <span class="text-xs font-bold text-on-error-container bg-error-container px-2 py-1 rounded-full">3 Urgent</span>
+                    <span class="text-xs font-bold text-on-error-container bg-error-container px-2 py-1 rounded-full">{{ $pendingRegistrations }} New</span>
                 </div>
-                <h3 class="text-on-surface-variant text-sm font-medium">Support Tickets</h3>
-                <p class="text-2xl font-black text-on-surface mt-1">14</p>
+                <h3 class="text-on-surface-variant text-sm font-medium">Pending Reg.</h3>
+                <p class="text-2xl font-black text-on-surface mt-1">{{ $pendingRegistrations }}</p>
             </div>
         </div>
         <!-- Secondary Row: Charts and Activity -->
@@ -58,56 +58,30 @@
                     <h2 class="text-lg font-bold text-on-surface">Registration Trends</h2>
                     <select class="bg-surface-container text-sm border-none rounded-lg focus:ring-primary">
                         <option>Last 6 Months</option>
-                        <option>Year to Date</option>
                     </select>
                 </div>
-                <div class="h-64 flex items-end justify-between px-4 pb-2 border-b border-outline-variant">
-                    <!-- Simulated Chart Bars -->
-                    <div class="w-12 bg-primary rounded-t-lg transition-all hover:opacity-80" style="height: 40%"></div>
-                    <div class="w-12 bg-primary-container rounded-t-lg transition-all hover:opacity-80" style="height: 65%"></div>
-                    <div class="w-12 bg-primary rounded-t-lg transition-all hover:opacity-80" style="height: 55%"></div>
-                    <div class="w-12 bg-primary-container rounded-t-lg transition-all hover:opacity-80" style="height: 85%"></div>
-                    <div class="w-12 bg-primary rounded-t-lg transition-all hover:opacity-80" style="height: 75%"></div>
-                    <div class="w-12 bg-tertiary-container rounded-t-lg transition-all hover:opacity-80" style="height: 95%"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-xs text-on-surface-variant px-4">
-                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                <div class="h-64">
+                    <canvas id="registrationChart"></canvas>
                 </div>
             </div>
             <!-- Recent Activity -->
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm flex flex-col">
                 <h2 class="text-lg font-bold text-on-surface mb-6">Recent Activity</h2>
                 <div class="space-y-6 flex-1 overflow-y-auto pr-2">
+                    @forelse($activities as $activity)
                     <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-full bg-secondary-container flex-shrink-0 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-on-secondary-container text-sm">person_add</span>
+                        <div class="w-10 h-10 rounded-full bg-{{ $activity['color'] }}-container flex-shrink-0 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-{{ $activity['color'] }}-container text-sm">{{ $activity['icon'] }}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-on-surface">New student registration</p>
-                            <p class="text-xs text-on-surface-variant">Minh Anh joined TOEIC Breakthrough</p>
-                            <p class="text-[10px] text-outline mt-1 uppercase font-bold tracking-wider">2 mins ago</p>
+                            <p class="text-sm font-bold text-on-surface">{{ $activity['title'] }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ $activity['desc'] }}</p>
+                            <p class="text-[10px] text-outline mt-1 uppercase font-bold tracking-wider">{{ $activity['time'] }}</p>
                         </div>
                     </div>
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-full bg-tertiary-container flex-shrink-0 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-on-tertiary-container text-sm">payments</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-on-surface">Payment received</p>
-                            <p class="text-xs text-on-surface-variant">Invoice #INV-4928 confirmed</p>
-                            <p class="text-[10px] text-outline mt-1 uppercase font-bold tracking-wider">1 hour ago</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-on-primary-container text-sm">campaign</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-on-surface">Campaign launched</p>
-                            <p class="text-xs text-on-surface-variant">'Summer Intensive' is now live</p>
-                            <p class="text-[10px] text-outline mt-1 uppercase font-bold tracking-wider">4 hours ago</p>
-                        </div>
-                    </div>
+                    @empty
+                    <p class="text-sm text-on-surface-variant text-center py-8">No recent activities found.</p>
+                    @endforelse
                 </div>
                 <button class="mt-6 text-primary text-sm font-bold hover:underline">View All Activities</button>
             </div>
@@ -139,4 +113,48 @@
         </div>
     </div>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('registrationChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($labels) !!},
+            datasets: [{
+                label: 'New Registrations',
+                data: {!! json_encode($data) !!},
+                borderColor: '#4f378a',
+                backgroundColor: 'rgba(79, 55, 138, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointBackgroundColor: '#4f378a'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: true,
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

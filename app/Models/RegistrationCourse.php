@@ -11,13 +11,20 @@ class RegistrationCourse extends Model
 
     protected $primaryKey = 'registrationid';
 
+    public function class()
+    {
+        return $this->belongsTo(Classes::class, 'classid', 'classid');
+    }
+
     public function student()
     {
         return $this->belongsTo(Student::class, 'studentid', 'studentid');
     }
 
-    public function class()
-    {
-        return $this->belongsTo(Classes::class, 'classid', 'classid');
-    }
+    protected $fillable = [
+        'studentid',
+        'classid',
+        'registration_date',
+        'status',
+    ];
 }

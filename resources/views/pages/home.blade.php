@@ -36,83 +36,54 @@
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6" id="course-container">
             <!-- Course 1: Featured Large -->
-            <div class="md:col-span-8 bg-white rounded-[2rem] overflow-hidden shadow-xl border border-outline-variant flex flex-col md:flex-row group">
+            @if(isset($courses[0]))
+            <div id="course-0" class="md:col-span-8 bg-white rounded-[2rem] overflow-hidden shadow-xl border border-outline-variant flex flex-col md:flex-row group transition-opacity duration-500">
                 <div class="md:w-1/2 relative h-64 md:h-full">
-                    <img class="w-full h-full object-cover" data-alt="A close-up shot of an open English textbook and a high-quality fountain pen on a clean white desk, surrounded by organized study notes. The lighting is crisp and bright, creating a focused academic atmosphere. The composition uses high-end product photography techniques to convey the premium quality of the IELTS intensive training program." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBepGa4cLhZuI0j5vK3ziazmuySXLP3X8_m1bkJZL962OWMR9XiZfzy50cXkrNEmlG4qtcDS7Kg--bD-VBlETgyXuXVa-AwpDU1PaTGfN4y9YiFDeyX8BlAR7ackrTG4nImo9pxuL63s-2VRzOqLcwbFb0H5asf0GaWl43oGacxNwUKlsL3Hltxdxa2ozOuRl3XKZrrplfz1NdfxTD7PWtUtHDEkw0nGsEVgMIEYK1HifZ5FU_CEGk7_MH-hDlpQeRqtE50ZoWBV2k" />
+                    <img class="w-full h-full object-cover course-image" src="{{ $courses[0]->image }}" alt="{{ $courses[0]->coursename }}" />
                     <span class="absolute top-4 left-4 tag-hot px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Hot</span>
                 </div>
                 <div class="md:w-1/2 p-8 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-xs font-bold">Certification</span>
+                            <span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-xs font-bold course-level">{{ $courses[0]->level }}</span>
                             <span class="text-outline text-xs flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 12 Weeks</span>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">IELTS Intensive Mastery (7.5+)</h3>
-                        <p class="text-on-surface-variant text-sm mb-6">Master all four skills with our proprietary feedback loop system and certified examiners.</p>
+                        <h3 class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors course-name">{{ $courses[0]->coursename }}</h3>
+                        <p class="text-on-surface-variant text-sm mb-6 course-description">{{ Str::limit($courses[0]->description, 150) }}</p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-2xl font-black text-on-surface">$599</span>
-                        <button class="bg-accent-turquoise text-white px-6 py-3 rounded-full font-bold hover:brightness-110 transition-all">Enroll Now</button>
+                        <span class="text-2xl font-black text-on-surface course-price">${{ number_format($courses[0]->price) }}</span>
+                        <a href="{{ route('courses.show', $courses[0]->courseid) }}" class="bg-accent-turquoise text-white px-6 py-3 rounded-full font-bold hover:brightness-110 transition-all">Enroll Now</a>
                     </div>
                 </div>
             </div>
-            <!-- Course 2: Standard -->
-            <div class="md:col-span-4 bg-white rounded-[2rem] overflow-hidden shadow-md border border-outline-variant flex flex-col hover:shadow-lg transition-shadow group">
+            @endif
+
+            @foreach($courses->slice(1, 3) as $index => $course)
+            <div id="course-{{ $index + 1 }}" class="md:col-span-4 bg-white rounded-[2rem] overflow-hidden shadow-md border border-outline-variant flex flex-col hover:shadow-lg transition-all group transition-opacity duration-500">
                 <div class="h-48 relative">
-                    <img class="w-full h-full object-cover" data-alt="A small, vibrant group of international professionals sitting in a collaborative modern workspace, engaging in business English communication. They are laughing and talking naturally, emphasizing a friendly and effective learning environment. Soft, warm sunlight filters through the office, highlighting a clean and energetic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEur2xkHemy_kBHROX3Qdqg_VTon4BLVmsSDso9WV9-a6pf-JMraXc8xBTlx_KNLgJwDW5v1SJd3LIf8ZxIZexmiR3IWcBkiP6Kg1Gntlhc92Ct37HrSkp8xgBXTvib1I4q4Z6szYt5tptqF19NiQ2itduYWaTulH8PKGu1_AeyUR-EgRA_T4E67LUAtjg2CthRJZjWJFA-WYcOQmNxvvjAxSADQ7mSX0SaiyQhMPGyn-7gs6kXfjoIu4fKwmYUvYSmgA8pXi3n1Q" />
+                    <img class="w-full h-full object-cover course-image" src="{{ $course->image }}" alt="{{ $course->coursename }}" />
+                    @if($loop->first)
                     <span class="absolute top-4 left-4 bg-green-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">New</span>
+                    @endif
                 </div>
                 <div class="p-6 flex-grow flex flex-col justify-between">
                     <div>
-                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Business Communication Pro</h3>
-                        <p class="text-on-surface-variant text-sm mb-4">Elevate your workplace presence with professional presentation and negotiation skills.</p>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors course-name">{{ $course->coursename }}</h3>
+                        <p class="text-on-surface-variant text-sm mb-4 course-description">{{ Str::limit($course->description, 100) }}</p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-xl font-black text-on-surface">$349</span>
-                        <button class="bg-accent-turquoise text-white p-3 rounded-full hover:brightness-110 transition-all">
+                        <span class="text-xl font-black text-on-surface course-price">${{ number_format($course->price) }}</span>
+                        <a href="{{ route('courses.show', $course->courseid) }}" class="bg-accent-turquoise text-white p-3 rounded-full hover:brightness-110 transition-all">
                             <span class="material-symbols-outlined">add_shopping_cart</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
-            <!-- Course 3: Standard -->
-            <div class="md:col-span-4 bg-white rounded-[2rem] overflow-hidden shadow-md border border-outline-variant flex flex-col hover:shadow-lg transition-shadow group">
-                <div class="h-48">
-                    <img class="w-full h-full object-cover" data-alt="A youthful and energetic photo of two students high-fiving in a library setting, holding their English certificates. The image captures the joy of achievement and personal growth. The color palette is bright and optimistic, with a focus on natural skin tones and a clean, modern educational background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1yfzUNgo6yXhPxHYuuVjjibAGAQ6Za5-Amps1NZqKfVX1vHW9H7B7-Cqy0M-kw3slvZQCpm5tVANqs892qqSg31pxGZqkxwPKAXkQQThjcR_Ibt4PATJFNUToVDkX2g_8d_6pODgLmBSt0jY-8DAZcXk6CsMkyYCuOw6ZA5IKlh8wvMgfTHChgsLoLWmMsKkwk_7KqCyCvPq523bleRQGP8uK3ZVl1xW17588D8Svvd_jOHXhhYghRGMjv77BURBEsQLeUV1NkY0" />
-                </div>
-                <div class="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Foundation English (A1-B1)</h3>
-                        <p class="text-on-surface-variant text-sm mb-4">The perfect starting point for beginners to build a solid grammar and vocabulary base.</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-xl font-black text-on-surface">$199</span>
-                        <button class="bg-accent-turquoise text-white p-3 rounded-full hover:brightness-110 transition-all">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Course 4: Standard -->
-            <div class="md:col-span-4 bg-white rounded-[2rem] overflow-hidden shadow-md border border-outline-variant flex flex-col hover:shadow-lg transition-shadow group">
-                <div class="h-48">
-                    <img class="w-full h-full object-cover" data-alt="An overhead shot of a laptop, a notebook with clear handwriting, and a cup of coffee on a wooden desk, symbolizing the flexibility of online learning. The screen displays a video call with a friendly English teacher. The lighting is soft and natural, evoking a cozy and productive home-study atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrVeyj0VtrXMnJ_1km-6DIVeL_vwbcSuy1YjD8xDg6xgBtXHCih39pyKbLOEwKeIRQCdkxZ5xWEGgeko99m8PMQW-6w9U-yu73W8K8Aqq34tmoX7S0rfGYAouejt9NzxKkMYA0LjFpg9XSMEsxvTjDC1bBCG2sxMubeQKosNVOppuD7BdBpnZNfHm77XBVeFFxa9bq4y6nKB3r4rcB2k8xB8GabPsvbyC53rYfrZMJwoKJdPOdB6x7thqUeYDmQLbrVa2YpJ6nxcE" />
-                </div>
-                <div class="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">TOEIC Masterclass</h3>
-                        <p class="text-on-surface-variant text-sm mb-4">Focused strategies to ace the TOEIC test for career advancement in global companies.</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-xl font-black text-on-surface">$299</span>
-                        <button class="bg-accent-turquoise text-white p-3 rounded-full hover:brightness-110 transition-all">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+
             <!-- CTA Banner -->
             <div class="md:col-span-4 bg-primary rounded-[2rem] p-8 text-on-primary flex flex-col justify-center items-center text-center">
                 <span class="material-symbols-outlined text-5xl mb-4" style="font-variation-settings: 'FILL' 1;">stars</span>
@@ -121,6 +92,63 @@
                 <button class="bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-surface-container-high transition-all">Test Your Level</button>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const allCourses = @json($courses);
+                let currentIndex = 0;
+                const itemsPerPage = 4;
+
+                if (allCourses.length <= itemsPerPage) return;
+
+                function updateCourseElement(el, course) {
+                    if (!el || !course) return;
+                    
+                    const img = el.querySelector('.course-image');
+                    const name = el.querySelector('.course-name');
+                    const desc = el.querySelector('.course-description');
+                    const price = el.querySelector('.course-price');
+                    const level = el.querySelector('.course-level');
+                    const link = el.querySelector('a');
+
+                    if (img) {
+                        img.src = course.image;
+                        img.alt = course.coursename;
+                    }
+                    if (name) name.textContent = course.coursename;
+                    if (desc) {
+                        const limit = el.id === 'course-0' ? 150 : 100;
+                        desc.textContent = course.description.length > limit ? course.description.substring(0, limit) + '...' : course.description;
+                    }
+                    if (price) price.textContent = '$' + new Intl.NumberFormat().format(course.price);
+                    if (level) level.textContent = course.level;
+                    if (link) link.href = `/course/${course.courseid}`;
+                }
+
+                function rotate() {
+                    currentIndex = (currentIndex + itemsPerPage) % allCourses.length;
+                    
+                    for (let i = 0; i < itemsPerPage; i++) {
+                        const el = document.getElementById(`course-${i}`);
+                        if (!el) continue;
+
+                        const courseIndex = (currentIndex + i) % allCourses.length;
+                        const course = allCourses[courseIndex];
+
+                        // Fade out
+                        el.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            updateCourseElement(el, course);
+                            // Fade in
+                            el.style.opacity = '1';
+                        }, 500);
+                    }
+                }
+
+                setInterval(rotate, 30000); // 30 seconds
+            });
+        </script>
     </section>
     <!-- Testimonials -->
     <section class="bg-surface-container-highest py-24 px-6">
@@ -130,66 +158,30 @@
                 <p class="text-on-surface-variant max-w-2xl mx-auto">Hear from our students who achieved their dreams through our English programs.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
+                @forelse($feedbacks as $feedback)
+                <!-- Testimonial -->
                 <div class="bg-surface p-8 rounded-[2rem] shadow-sm flex flex-col">
                     <div class="flex text-primary mb-6">
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        @for($i = 1; $i <= 5; $i++)
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' {{ $i <= $feedback->ratingscore ? 1 : 0 }};">star</span>
+                        @endfor
                     </div>
-                    <p class="text-on-surface italic mb-8 flex-grow">"The IELTS intensive course was a game-changer for me. I went from a 6.0 to a 7.5 in just 3 months. Ms. Hoa's method of breaking down complex grammar is unmatched."</p>
+                    <p class="text-on-surface italic mb-8 flex-grow">"{{ $feedback->comment }}"</p>
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
-                            <img class="w-full h-full object-cover" data-alt="A professional portrait of a young Vietnamese woman with a confident smile, wearing business casual attire. She is positioned against a soft-focus office background. The lighting is warm and flattering, conveying a sense of success and professionalism achieved through learning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8QXSjdkS5S9Jp8N8zOBKYYcFD42gjTAuoRjjAlUAAUqR53KRHQ74_xyXwzWRt0TfL8ouLeOaItA9bswI929xCQLrN2CPQzCaQxUNf7ngqXmSIzy1i9N5Q347l1olJTEgLAO7pVA0rbqsIRG2n6JAeM4mCnra6EwgCz98csrnyTnX6mcdfVrfYSO9KNHcy-GL30pUrTIbs7iZMvg7dbRXGxE82LJ5KPslZ_x5c0pBlwa7LFubBJhpmEeuDAEWVdjPaVZQ2ubqpzYw" />
+                        <div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden flex items-center justify-center text-on-primary-fixed font-bold text-xl">
+                            {{ substr($feedback->student->user->fullname ?? 'S', 0, 1) }}
                         </div>
                         <div>
-                            <h4 class="font-bold text-on-surface">Minh Anh Tran</h4>
-                            <p class="text-xs text-on-surface-variant">Overseas Student, Melbourne</p>
+                            <h4 class="font-bold text-on-surface">{{ $feedback->student->user->fullname ?? 'Unknown Student' }}</h4>
+                            <p class="text-xs text-on-surface-variant">{{ $feedback->course->coursename ?? 'General Student' }}</p>
                         </div>
                     </div>
                 </div>
-                <!-- Testimonial 2 -->
-                <div class="bg-surface p-8 rounded-[2rem] shadow-sm flex flex-col">
-                    <div class="flex text-primary mb-6">
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    </div>
-                    <p class="text-on-surface italic mb-8 flex-grow">"I used to be terrified of speaking in meetings. After the Business English course, I now lead presentations with confidence. My colleagues were amazed by the transformation!"</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
-                            <img class="w-full h-full object-cover" data-alt="A headshot of a smiling young male professional in a crisp white shirt, radiating confidence and friendliness. The background is a modern architectural space with clean lines. The photography style is high-key and bright, representing the successful outcome of language proficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr3ufZiv3_4GJ68QkJWacCi-kBfix6jrjaC-JfTFqVsgkJVfQzthhE9LlvDl3vHaeSDJDpn3INfOuiwVu_Mb55hhyJ_lUcCMbY41MZ2u51oUaaZtOA6NKy6fa_cYzXM7LCnZxVygMSBxwuBoyvxW_3WKI2mIao-99qXvkMgidyim8yE9LwGaDJK5_MsLU9NwZvazsRqG1pGnT5haAQwLAPKgo_IMYsCSyuhO3XwXtqGYFNo9fjQZNqtc__7L-EwDC0z3MT0sztF2g" />
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-on-surface">Hoang Nguyen</h4>
-                            <p class="text-xs text-on-surface-variant">Marketing Manager, Tech Corp</p>
-                        </div>
-                    </div>
+                @empty
+                <div class="col-span-3 text-center text-on-surface-variant">
+                    No testimonials yet. Be the first to share your journey!
                 </div>
-                <!-- Testimonial 3 -->
-                <div class="bg-surface p-8 rounded-[2rem] shadow-sm flex flex-col">
-                    <div class="flex text-primary mb-6">
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    </div>
-                    <p class="text-on-surface italic mb-8 flex-grow">"The community at Ms. Hoa English is what makes it special. I've made lifelong friends while improving my English. Highly recommend for anyone looking for a supportive environment."</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
-                            <img class="w-full h-full object-cover" data-alt="A professional and friendly portrait of a woman in her late 20s, looking directly at the camera with an encouraging expression. She is in a collaborative library space. The aesthetic is clean and academic, emphasizing the intellectual and social benefits of the learning program." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWpHeCxxDCzM7it-1NS8AXTcbb7AI5luOwF1BeK_bkyAZlmafzqw0kbmGQjta_WKksj_f_SfbfLqz7y2Gzb5UbNqLis-iZaecTXtkYaCbN3H1b36ibHJJM7jB3nw_xbSYqWvPIGFvKDcQixrr5jqF-iKyxbex_wXVnwpzGPGcbiq4oQNZarywPMWKOmEelP1pyoO-TjVc2kqZfo2bBSZWmyT6o_RgowitP4LUOzO4Yql3oysvbyIA_bRE6LODXxdFfr5gYDMRXXBA" />
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-on-surface">Lan Phuong</h4>
-                            <p class="text-xs text-on-surface-variant">Content Creator</p>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
