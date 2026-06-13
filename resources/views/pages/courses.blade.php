@@ -38,20 +38,21 @@
     <section class="sticky top-[64px] z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant py-4 px-6 shadow-sm">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 scrollbar-hide">
-                <button class="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-on-primary font-bold text-sm">Tất cả</button>
-                <button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors">TOEIC</button>
-                <button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors">IELTS</button>
-                <button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors">Giao tiếp</button>
-                <button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors">Tiếng Anh trẻ em</button>
+                @php $currentCat = request('category', 'Tất cả'); @endphp
+                @foreach(['Tất cả', 'TOEIC', 'IELTS', 'Giao tiếp', 'Tiếng Anh trẻ em'] as $cat)
+                <a href="{{ request()->fullUrlWithQuery(['category' => $cat]) }}" 
+                   class="whitespace-nowrap px-6 py-2 rounded-full {{ $currentCat == $cat ? 'bg-primary text-on-primary font-bold' : 'bg-surface-container-high text-on-surface-variant font-medium hover:bg-primary-container hover:text-on-primary-container' }} text-sm transition-colors">
+                    {{ $cat }}
+                </a>
+                @endforeach
             </div>
             <div class="flex items-center gap-4 w-full lg:w-auto">
                 <div class="relative flex-grow lg:w-80">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">tune</span>
-                    <select class="w-full pl-10 pr-4 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-sm focus:ring-primary focus:border-primary appearance-none">
-                        <option>Sắp xếp: Mới nhất</option>
-                        <option>Giá: Thấp đến Cao</option>
-                        <option>Giá: Cao đến Thấp</option>
-                        <option>Phổ biến nhất</option>
+                    <select onchange="window.location.href=this.value" class="w-full pl-10 pr-4 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-sm focus:ring-primary focus:border-primary appearance-none cursor-pointer">
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}" {{ request('sort') == 'newest' ? 'selected' : '' }}>Sắp xếp: Mới nhất</option>
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_low']) }}" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Giá: Thấp đến Cao</option>
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'price_high']) }}" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Giá: Cao đến Thấp</option>
                     </select>
                 </div>
             </div>
@@ -60,207 +61,42 @@
     <!-- Course Grid -->
     <section class="py-12 px-6 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Course Card 1 -->
-            @foreach ($courses as $course)
+            @forelse ($courses as $course)
             <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
                 <div class="relative h-48 overflow-hidden">
-                    <img alt="TOEIC Mastery" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A professional, high-energy classroom setting with a diverse group of students engaged in learning English. The environment is modern with clean white walls and turquoise accent furniture, illuminated by bright natural sunlight coming through a window. A friendly female teacher is explaining concepts on a digital whiteboard, embodying a modern and sophisticated light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuYpeSfpZYg9QK3PKO5avVjTYJLF7DtFSaIiIH4EELnNoJJ3qrs3C4eGGFP0D-b9Iq1xmrXH6OrelmNOnDjuxLkp-s3fMcyKnrDkiZjMCWeYKLjp9RbCJ3pFTxK5nuB404lD6p3J7VXoshUCXrnrDGKK0wdgK6BEUnSb-COZH8mcs2L9W0TillbMbjHjC1GHFvU9UEOpmo7hYa0RBx7M6qc-jUJ0-MGeWVi2XVT9A7L72nbilYAz2cbIQpYu8BVP8TjjyA49R5gHQ" />
-                    <div class="absolute top-3 left-3 bg-error text-on-error text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">Hot</div>
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">TOEIC</div>
+                    <img alt="{{ $course->coursename }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ $course->image }}" />
+                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">{{ $course->level }}</div>
                 </div>
                 <div class="p-5 flex flex-col flex-grow">
                     <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">{{$course->coursename}}</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 6 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">bar_chart</span> Nâng cao
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">school</span> Offline
-                        </span>
-                    </div>
+                    <p class="text-xs text-on-surface-variant line-clamp-2 mb-4">{{ $course->description }}</p>
                     <div class="mt-auto">
                         <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">{{$course->price}}</span>
-                            <span class="text-sm text-outline line-through">{{$course->price*1.2}}</span>
+                            <span class="text-xl font-black text-on-surface">{{ number_format($course->price) }}đ</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
-                            <a class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors" type="button" href="{{route('courses.show', $course->courseid)}}">Chi tiết</a>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
+                            <a class="py-2 px-4 border border-primary text-primary rounded-xl text-center font-bold text-xs hover:bg-primary/5 transition-colors" href="{{route('courses.show', $course->courseid)}}">Chi tiết</a>
+                            <a href="{{route('courses.show', $course->courseid)}}" class="py-2 px-4 bg-primary text-on-primary rounded-xl text-center font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</a>
                         </div>
                     </div>
                 </div>
             </div>
-            @endforeach
-            <!-- Course Card 2 -->
-            <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
-                <div class="relative h-48 overflow-hidden">
-                    <img alt="IELTS Intensive" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A close-up shot of an open English workbook with a stylish pen and a cup of matcha tea on a minimalist light wood desk. The lighting is soft and airy, creating a focused and academic atmosphere. Subtle turquoise accents appear in the notebook's cover design. The scene is clean, modern, and perfectly suited for a premium educational brand's digital presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHX0Qz4LcGIpYg1MlG_s1ieFTIE22ARABh20BGqRSusL9waWpTga_Niv7OieEcj7dTuMAyK9UjSAekMOuCsdqzy_6FjW_tdsqhWe296CxH3_i6y3EIBixZLPo5mI9vLglvklPPdT8OOqc5llcxjI-tDt8AfZSzzyAUR0kXXcqjZRTrYnfHGjq_SHVVyXTjjn-KeQgHq2x1k3-LYPjfiLlqq82qJuAJOMk5P5q1Ke37ODxVflgs1Ysv0ysSLp4hKlUTHVwQ8E17w5w" />
-                    <div class="absolute top-3 left-3 bg-primary text-on-primary text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">New</div>
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">IELTS</div>
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">IELTS Intensive 7.5+</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 8 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">bar_chart</span> Chuyên sâu
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">laptop_mac</span> Online
-                        </span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">12.000.000đ</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
+            @empty
+            <div class="col-span-full py-20 text-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-6xl opacity-20 mb-4">search_off</span>
+                <p class="text-lg font-bold">Không tìm thấy khóa học phù hợp.</p>
+                <a href="{{ route('courses.index') }}" class="text-primary hover:underline mt-2 inline-block">Xem tất cả khóa học</a>
             </div>
-            <!-- Course Card 3 -->
-            <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
-                <div class="relative h-48 overflow-hidden">
-                    <img alt="Giao tiếp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A vibrant shot of three young professionals from different ethnic backgrounds laughing and chatting while holding coffee cups in a modern, plant-filled lounge. The scene captures authentic human connection and effective communication. The colors are bright with soft shadows, maintaining a high-key light mode look with delicate primary color highlights in the decor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCStlI16A9nrqm4SegT9z7zxAU7NdnQ5LSywYj6zGscUqByLcgBjUmW9L2GtRXR2vrn6TReAccA06XqOYfRJ1F-J_qtGFrnIzYbE8enetYVXEqPrI-9NJW9JuG_QNCcLWjrj-UdU9lEOmPJ-hfgl5u0Bv1moPYUd5B26HpEBwquJFCguczZS7alQW9SOB_SG09o-ND94VAQ6CJ1IK3dLoyLJmrg-TL_qwD_FN8i_FrD5NbOxByiCoYEXQxwnoj-FrIhf0pn7bvuINc" />
-                    <div class="absolute top-3 left-3 bg-error text-on-error text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">-20%</div>
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">Giao tiếp</div>
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">English for Career</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 3 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">bar_chart</span> Mọi trình độ
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">groups</span> Nhóm nhỏ
-                        </span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">3.200.000đ</span>
-                            <span class="text-sm text-outline line-through">4.000.000đ</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Course Card 4 -->
-            <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
-                <div class="relative h-48 overflow-hidden">
-                    <img alt="Kids" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bright, cheerful classroom for children with colorful posters and educational toys. Two young children are smiling as they point to colorful English flashcards on a table. The lighting is warm and joyful, creating an inviting educational atmosphere. The color scheme is vibrant yet balanced, dominated by clean whites and energetic turquoise accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOi3og2PnmsRbP7ymDtiqAhjezMxulV98FGVlvU4XpIuuq4z7mZz-FmdTRm31yeX0gU8ZukqQepunJ-5t2Sz_B9xGyA3P4ijQE-AeJ_GNh5ZKGV5gfoUp-iNkkY2a85h6tC1Ke7YC8C5jt3rCO12R6nj6vBeqNp5r35yX767ROWJbtLoRfIbgHNRCSvOjJ1jsTzOL5g5dyRLMzz4NSFK6-xlnkGhn-LWQzVnAlc-2r-sbFbbVRnZbwyhF4tANhKHabLrF0DtfDzU8" />
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">Tiếng Anh trẻ em</div>
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Junior English Star</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 12 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">face</span> 6-12 tuổi
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">celebration</span> Vui vẻ
-                        </span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">8.900.000đ</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeating for grid fill -->
-            <!-- Card 5 -->
-            <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
-                <div class="relative h-48 overflow-hidden">
-                    <img alt="Student Success" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A candid photo of a happy university student with a backpack walking through a sunlit campus hallway, holding a stack of books and a laptop. The mood is aspirational and successful. The image has a clean, high-contrast look with bright whites and soft secondary color tones, perfectly aligned with a professional and modern light-mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVwYc5M7pAj5ycnJG5zvCCnm49aWLkBFKbF3fJf7kT1Gf0_m-PE2ktfUcN-vHZ3d7UeUdSMTRdZY3x583F0HCgm7U1s1C5zvsiGb3j4iipZNCGl6QbA2eh3XG-72Lgh9OAHhwCIB_TSnj3s5ps8dH9_rQJDnVDArulG_Wv5Fnwtm_dOIS3vSQlGKk-CHn-EiVJy8By50yFSIa2I-hA3jB6RQTgAi8j2rRKlVqN803mQ4xXeKmMCCcGYcaJ_RiAFZldh2gEegxkebE" />
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">TOEIC</div>
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">TOEIC Speaking &amp; Writing</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 2 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">bar_chart</span> Chuyên biệt
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">edit</span> Kỹ năng
-                        </span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">4.800.000đ</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 6 -->
-            <div class="group flex flex-col bg-surface rounded-2xl overflow-hidden border border-outline-variant hover:shadow-xl transition-all duration-300 relative">
-                <div class="relative h-48 overflow-hidden">
-                    <img alt="Advanced English" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An overhead flat lay of a clean workspace featuring a sleek laptop, a planner, a cup of coffee, and some minimalist stationery on a white marble surface. The composition is artistic and professional, with a cool-toned lighting setup. Accents of primary turquoise are found in the planner and stationery, creating a cohesive and high-end brand feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5pZxiMJ0SZDjGQQPcAF0yafMVi3uzx_hIEioIpKNhrY1COU13u8A8hVmm_fNYW9Ft-vLkx5VVaTZWQXoVnd0Hqh6RA7W6wszJ93pE91x9odXqP9ZhlBaFAwzO90CZJmD6bv5-vHa5KsTX5Y34DLPURFzPDYjs6OeJlmNh6MeITn-_ztY0imWFAJvtCIMZOT78TFRhyZiX7synFcbmu1Jep-iMeXce8jmvtzQeYb8bUz36SMtzo_lK9liQNJ__dhQaabks2kEV-PI" />
-                    <div class="absolute top-3 left-3 bg-error text-on-error text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">Sale</div>
-                    <div class="absolute bottom-3 right-3 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded-lg text-primary font-bold text-xs border border-primary/20">IELTS</div>
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">IELTS Basic to Advanced</h3>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">schedule</span> 14 Tháng
-                        </span>
-                        <span class="bg-surface-container-high px-2 py-1 rounded-md text-[10px] font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]">bar_chart</span> Lộ trình dài
-                        </span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-xl font-black text-on-surface">18.500.000đ</span>
-                            <span class="text-sm text-outline line-through">22.000.000đ</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="py-2 px-4 border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary/5 transition-colors">Chi tiết</button>
-                            <button class="py-2 px-4 bg-primary text-on-primary rounded-xl font-bold text-xs hover:opacity-90 transition-opacity">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
         <!-- Pagination -->
-        <div class="mt-16 flex justify-center items-center gap-2">
-            <button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors disabled:opacity-30">
-                <span class="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button class="w-10 h-10 rounded-full bg-primary text-on-primary font-bold">1</button>
-            <button class="w-10 h-10 rounded-full border border-outline-variant font-medium hover:bg-surface-container transition-colors">2</button>
-            <button class="w-10 h-10 rounded-full border border-outline-variant font-medium hover:bg-surface-container transition-colors">3</button>
-            <span class="px-2 text-outline">...</span>
-            <button class="w-10 h-10 rounded-full border border-outline-variant font-medium hover:bg-surface-container transition-colors">12</button>
-            <button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors">
-                <span class="material-symbols-outlined">chevron_right</span>
-            </button>
+        <div class="mt-16 flex flex-col items-center gap-4">
+            <p class="text-sm text-on-surface-variant font-medium">
+                Hiển thị {{ $courses->firstItem() ?? 0 }} đến {{ $courses->lastItem() ?? 0 }} của {{ $courses->total() }} khóa học
+            </p>
+            <div class="flex justify-center">
+                {{ $courses->links() }}
+            </div>
         </div>
     </section>
     <!-- Newsletter / CTA -->

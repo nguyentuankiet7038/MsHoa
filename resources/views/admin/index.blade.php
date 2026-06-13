@@ -1,11 +1,10 @@
 @extends('layouts.dashboard')
 @section('contentdashboard')
-<!-- Main Canvas -->
-<main class="flex-1 lg:ml-64 p-6 bg-surface-bright">
+<div class="p-6">
     <div class="max-w-7xl mx-auto">
         <header class="mb-8">
-            <h1 class="text-3xl font-headline font-extrabold text-on-surface">Dashboard Overview</h1>
-            <p class="text-on-surface-variant">Welcome back, Admin. Here's what's happening at the center today.</p>
+            <h1 class="text-3xl font-headline font-extrabold text-on-surface">Tổng quan Bảng điều khiển</h1>
+            <p class="text-on-surface-variant">Chào mừng trở lại, Admin. Đây là những gì đang diễn ra tại trung tâm hôm nay.</p>
         </header>
         <!-- Statistical Cards Bento Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -14,9 +13,9 @@
                     <div class="p-2 bg-primary-container rounded-xl text-on-primary-container">
                         <span class="material-symbols-outlined">group</span>
                     </div>
-                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">Total</span>
+                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">Tổng cộng</span>
                 </div>
-                <h3 class="text-on-surface-variant text-sm font-medium">Total Students</h3>
+                <h3 class="text-on-surface-variant text-sm font-medium">Tổng số học sinh</h3>
                 <p class="text-2xl font-black text-on-surface mt-1">{{ number_format($totalStudents) }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
@@ -24,9 +23,9 @@
                     <div class="p-2 bg-secondary-container rounded-xl text-on-secondary-container">
                         <span class="material-symbols-outlined">menu_book</span>
                     </div>
-                    <span class="text-xs font-bold text-on-secondary-fixed-variant bg-secondary-fixed px-2 py-1 rounded-full">{{ $activeCourses }} Active</span>
+                    <span class="text-xs font-bold text-on-secondary-fixed-variant bg-secondary-fixed px-2 py-1 rounded-full">{{ $activeCourses }} Đang hoạt động</span>
                 </div>
-                <h3 class="text-on-surface-variant text-sm font-medium">Active Courses</h3>
+                <h3 class="text-on-surface-variant text-sm font-medium">Khóa học đang hoạt động</h3>
                 <p class="text-2xl font-black text-on-surface mt-1">{{ $activeCourses }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
@@ -34,9 +33,9 @@
                     <div class="p-2 bg-tertiary-container rounded-xl text-on-tertiary-container">
                         <span class="material-symbols-outlined">payments</span>
                     </div>
-                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">This Month</span>
+                    <span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-1 rounded-full">Tháng này</span>
                 </div>
-                <h3 class="text-on-surface-variant text-sm font-medium">Monthly Revenue</h3>
+                <h3 class="text-on-surface-variant text-sm font-medium">Doanh thu hàng tháng</h3>
                 <p class="text-2xl font-black text-on-surface mt-1">${{ number_format($monthlyRevenue) }}</p>
             </div>
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
@@ -44,9 +43,9 @@
                     <div class="p-2 bg-error-container rounded-xl text-on-error-container">
                         <span class="material-symbols-outlined">how_to_reg</span>
                     </div>
-                    <span class="text-xs font-bold text-on-error-container bg-error-container px-2 py-1 rounded-full">{{ $pendingRegistrations }} New</span>
+                    <span class="text-xs font-bold text-on-error-container bg-error-container px-2 py-1 rounded-full">{{ $pendingRegistrations }} Mới</span>
                 </div>
-                <h3 class="text-on-surface-variant text-sm font-medium">Pending Reg.</h3>
+                <h3 class="text-on-surface-variant text-sm font-medium">Đăng ký đang chờ</h3>
                 <p class="text-2xl font-black text-on-surface mt-1">{{ $pendingRegistrations }}</p>
             </div>
         </div>
@@ -55,9 +54,9 @@
             <!-- Chart Placeholder Section -->
             <div class="lg:col-span-2 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-bold text-on-surface">Registration Trends</h2>
+                    <h2 class="text-lg font-bold text-on-surface">Xu hướng đăng ký</h2>
                     <select class="bg-surface-container text-sm border-none rounded-lg focus:ring-primary">
-                        <option>Last 6 Months</option>
+                        <option>6 tháng qua</option>
                     </select>
                 </div>
                 <div class="h-64">
@@ -66,7 +65,7 @@
             </div>
             <!-- Recent Activity -->
             <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm flex flex-col">
-                <h2 class="text-lg font-bold text-on-surface mb-6">Recent Activity</h2>
+                <h2 class="text-lg font-bold text-on-surface mb-6">Hoạt động gần đây</h2>
                 <div class="space-y-6 flex-1 overflow-y-auto pr-2">
                     @forelse($activities as $activity)
                     <div class="flex gap-4">
@@ -80,10 +79,10 @@
                         </div>
                     </div>
                     @empty
-                    <p class="text-sm text-on-surface-variant text-center py-8">No recent activities found.</p>
+                    <p class="text-sm text-on-surface-variant text-center py-8">Không tìm thấy hoạt động gần đây nào.</p>
                     @endforelse
                 </div>
-                <button class="mt-6 text-primary text-sm font-bold hover:underline">View All Activities</button>
+                <button class="mt-6 text-primary text-sm font-bold hover:underline">Xem tất cả hoạt động</button>
             </div>
         </div>
         <!-- Custom Bento Section: Top Teachers / Featured Courses -->
@@ -92,17 +91,17 @@
                 <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK58qfgY5ZVynkcmgPPFjT3PzYHsPV01O3jqlJ3ggEYlLQPXTc1yzkGtEsOkeJNlx_DygjSlfDlVeX_3p5aPhU5bKbvWIQRGDCqjHufqJTzRMoCXkibHor9H_X7P0El2_b5ff-hE6cgbZVSadaH4cjKDG67kHzXaS-0kENnTKV8V8mf3eurl6zJJ2LN5i5sETyV0YI3giZqmH77-HMQmSL4bLJtdjfbC0g_0g-WZB01rjqx2_S6EF_RCaWy6l1z3dYKw_TR-cr_Hc" />
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
                 <div class="absolute bottom-6 left-8">
-                    <h3 class="text-2xl font-black text-white">Teacher Excellence Award</h3>
-                    <p class="text-white/80 max-w-md">Celebrating 98% student satisfaction for the Q2 Academic Season.</p>
-                    <button class="mt-4 bg-white text-primary px-6 py-2 rounded-full font-bold text-sm">View Rankings</button>
+                    <h3 class="text-2xl font-black text-white">Giải thưởng Giáo viên Xuất sắc</h3>
+                    <p class="text-white/80 max-w-md">Chào mừng mức độ hài lòng của học sinh đạt 98% trong học kỳ Q2.</p>
+                    <button class="mt-4 bg-white text-primary px-6 py-2 rounded-full font-bold text-sm">Xem bảng xếp hạng</button>
                 </div>
             </div>
             <div class="bg-surface-container-high p-8 rounded-3xl flex flex-col justify-center items-center text-center">
                 <div class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center mb-4">
                     <span class="material-symbols-outlined text-4xl">verified</span>
                 </div>
-                <h4 class="text-xl font-bold text-on-surface">Course Quality</h4>
-                <p class="text-on-surface-variant mt-2 text-sm">All course materials updated to latest 2024 standards.</p>
+                <h4 class="text-xl font-bold text-on-surface">Chất lượng khóa học</h4>
+                <p class="text-on-surface-variant mt-2 text-sm">Tất cả tài liệu khóa học đã được cập nhật theo tiêu chuẩn mới nhất năm 2024.</p>
                 <div class="mt-4 flex -space-x-3">
                     <div class="w-10 h-10 rounded-full border-2 border-white bg-secondary-container"></div>
                     <div class="w-10 h-10 rounded-full border-2 border-white bg-tertiary-container"></div>
@@ -112,7 +111,7 @@
             </div>
         </div>
     </div>
-</main>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -122,14 +121,14 @@
         data: {
             labels: {!! json_encode($labels) !!},
             datasets: [{
-                label: 'New Registrations',
+                label: 'Đăng ký mới',
                 data: {!! json_encode($data) !!},
-                borderColor: '#4f378a',
-                backgroundColor: 'rgba(79, 55, 138, 0.1)',
+                borderColor: '#00C2CB',
+                backgroundColor: 'rgba(0, 194, 203, 0.1)',
                 fill: true,
                 tension: 0.4,
                 borderWidth: 3,
-                pointBackgroundColor: '#4f378a'
+                pointBackgroundColor: '#00C2CB'
             }]
         },
         options: {

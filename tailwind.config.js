@@ -1,49 +1,49 @@
 /** @type {import('tailwindcss').Config} */
 
 const colors = {
-    // Primary
-    primary: "#4f378a",
-    "primary-container": "#6750a4",
-    "primary-fixed": "#e9ddff",
-    "primary-fixed-dim": "#cfbcff",
-    "inverse-primary": "#cfbcff",
+    // Primary - Ms. Hoa Turquoise
+    primary: "#00C2CB",
+    "primary-container": "#00A5AF",
+    "primary-fixed": "#E0F7F9",
+    "primary-fixed-dim": "#B2EBF2",
+    "inverse-primary": "#B2EBF2",
 
-    // Secondary
-    secondary: "#63597c",
-    "secondary-container": "#e1d4fd",
-    "secondary-fixed": "#e9ddff",
-    "secondary-fixed-dim": "#cdc0e9",
+    // Secondary - Teal
+    secondary: "#008B8B",
+    "secondary-container": "#CCF2F4",
+    "secondary-fixed": "#E0F7F9",
+    "secondary-fixed-dim": "#B2EBF2",
 
-    // Tertiary
+    // Tertiary - Gold/Yellow accent remains for contrast
     tertiary: "#765b00",
     "tertiary-container": "#c9a74d",
     "tertiary-fixed": "#ffdf93",
     "tertiary-fixed-dim": "#e7c365",
 
     // Surface
-    background: "#fdf7ff",
-    surface: "#fdf7ff",
-    "surface-dim": "#ded8e0",
-    "surface-bright": "#fdf7ff",
+    background: "#F8FDFF",
+    surface: "#F8FDFF",
+    "surface-dim": "#D8E3E6",
+    "surface-bright": "#F8FDFF",
     "surface-container-lowest": "#ffffff",
-    "surface-container-low": "#f8f2fa",
-    "surface-container": "#f2ecf4",
-    "surface-container-high": "#ece6ee",
-    "surface-container-highest": "#e6e0e9",
-    "surface-variant": "#e6e0e9",
-    "surface-tint": "#6750a4",
-    "inverse-surface": "#322f35",
+    "surface-container-low": "#F0F9FA",
+    "surface-container": "#E6F4F5",
+    "surface-container-high": "#DBEDED",
+    "surface-container-highest": "#D1E6E6",
+    "surface-variant": "#D1E6E6",
+    "surface-tint": "#00C2CB",
+    "inverse-surface": "#2D3133",
 
     // Text / On Colors
     "on-primary": "#ffffff",
-    "on-primary-container": "#e0d2ff",
-    "on-primary-fixed": "#22005d",
-    "on-primary-fixed-variant": "#4f378a",
+    "on-primary-container": "#003B3D",
+    "on-primary-fixed": "#003B3D",
+    "on-primary-fixed-variant": "#004F51",
 
     "on-secondary": "#ffffff",
-    "on-secondary-container": "#645a7d",
-    "on-secondary-fixed": "#1f1635",
-    "on-secondary-fixed-variant": "#4b4263",
+    "on-secondary-container": "#003233",
+    "on-secondary-fixed": "#001F20",
+    "on-secondary-fixed-variant": "#003B3D",
 
     "on-tertiary": "#ffffff",
     "on-tertiary-container": "#503d00",
@@ -66,7 +66,7 @@ const colors = {
     "outline-variant": "#cbc4d2",
 
     // Custom Brand
-    "brand-turquoise": "#00CED1",
+    "brand-turquoise": "#00C2CB",
 };
 
 module.exports = {
@@ -74,6 +74,7 @@ module.exports = {
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
+        "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
     ],
 
     darkMode: "class",

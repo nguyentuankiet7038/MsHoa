@@ -12,6 +12,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\HelpCenterController;
+use App\Http\Controllers\LearningProgressController;
 use App\Http\Controllers\SupportController;
 
 /*
@@ -35,10 +36,32 @@ Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'
 Route::get('/course/{id}', [CourseController::class, 'show'])->name('courses.show');
 Route::get('/support', [SupportController::class, 'index'])->name('support');
 Route::post('/support/chat', [SupportController::class, 'chat'])->name('support.chat');
+Route::get('/my-grades', [LearningProgressController::class, 'studentIndex'])->name('student.grades');
+
+use App\Http\Controllers\TeacherDashboardController;
+
+// Teacher Dashboard
+Route::prefix('teacher')->group(function () {
+    Route::get('/schedule', [TeacherDashboardController::class, 'schedule'])->name('teacher.schedule');
+    Route::get('/grades-attendance', [TeacherDashboardController::class, 'gradesAttendance'])->name('teacher.grades_attendance');
+    Route::post('/grades-attendance/update', [TeacherDashboardController::class, 'updateGradesAttendance'])->name('teacher.grades_attendance.update');
+});
+
+
 
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [PageController::class, 'dashboard'])->name('dashboard');
     
+    // Learning Progress (Điểm sinh viên)
+    Route::prefix('learning-progress')->group(function () {
+        Route::get('/', [LearningProgressController::class, 'index'])->name('admin.learning-progress.index');
+        Route::get('/create', [LearningProgressController::class, 'create'])->name('admin.learning-progress.create');
+        Route::post('/', [LearningProgressController::class, 'store'])->name('admin.learning-progress.store');
+        Route::get('/{id}/edit', [LearningProgressController::class, 'edit'])->name('admin.learning-progress.edit');
+        Route::put('/{id}', [LearningProgressController::class, 'update'])->name('admin.learning-progress.update');
+        Route::delete('/{id}', [LearningProgressController::class, 'destroy'])->name('admin.learning-progress.destroy');
+    });
+
     // Help Center (AI Teaching)
     Route::prefix('help-center')->group(function () {
         Route::get('/', [HelpCenterController::class, 'index'])->name('admin.help-center.index');
@@ -117,6 +140,7 @@ Route::prefix('dashboard')->group(function () {
     });
 });
 
+Route::get('/login', [AuthController::class, 'showLogin'])->name('form.login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

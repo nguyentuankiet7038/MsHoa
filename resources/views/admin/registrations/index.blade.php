@@ -5,8 +5,8 @@
     <!-- Header & Actions -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-            <h1 class="text-3xl font-headline font-black text-on-surface">Registration Management</h1>
-            <p class="text-on-surface-variant mt-1">Manage and track student course registrations.</p>
+            <h1 class="text-3xl font-headline font-black text-on-surface">Quản lý đăng ký</h1>
+            <p class="text-on-surface-variant mt-1">Quản lý và theo dõi các đăng ký khóa học của học sinh.</p>
         </div>
     </div>
 
@@ -22,12 +22,12 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-surface-container-high border-b border-outline-variant">
                     <tr>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Registration ID</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Student</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Course/Class</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Reg. Date</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Status</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface text-right">Actions</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Mã đăng ký</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Học sinh</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Khóa học/Lớp học</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Ngày đăng ký</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Trạng thái</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface text-right">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant">
@@ -40,17 +40,17 @@
                                     {{ substr($reg->student->user->fullname ?? 'S', 0, 1) }}
                                 </div>
                                 <div>
-                                    <p class="font-bold text-on-surface">{{ $reg->student->user->fullname ?? 'Unknown' }}</p>
+                                    <p class="font-bold text-on-surface">{{ $reg->student->user->fullname ?? 'Không xác định' }}</p>
                                     <p class="text-xs text-on-surface-variant">{{ $reg->student->user->email ?? '' }}</p>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="font-semibold text-on-surface">{{ $reg->class->course->coursename ?? 'No Course' }}</p>
-                            <p class="text-xs text-on-surface-variant">Class: {{ $reg->class->classname ?? 'No Class' }}</p>
+                            <p class="font-semibold text-on-surface">{{ $reg->class->course->coursename ?? 'Không có khóa học' }}</p>
+                            <p class="text-xs text-on-surface-variant">Lớp: {{ $reg->class->classname ?? 'Không có lớp học' }}</p>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant text-sm">
-                            {{ \Carbon\Carbon::parse($reg->registration_date)->format('M d, Y') }}
+                            {{ \Carbon\Carbon::parse($reg->registration_date)->format('d/m/Y') }}
                         </td>
                         <td class="px-6 py-4">
                             @php
@@ -60,10 +60,17 @@
                                     'rejected' => 'bg-red-100 text-red-700',
                                     'canceled' => 'bg-gray-100 text-gray-700'
                                 ];
+                                $statusTexts = [
+                                    'pending' => 'đang chờ',
+                                    'approved' => 'đã duyệt',
+                                    'rejected' => 'từ chối',
+                                    'canceled' => 'đã hủy'
+                                ];
                                 $statusClass = $statusClasses[$reg->status] ?? 'bg-surface-variant text-on-surface-variant';
+                                $statusText = $statusTexts[$reg->status] ?? $reg->status;
                             @endphp
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold capitalize {{ $statusClass }}">
-                                {{ $reg->status }}
+                                {{ $statusText }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
@@ -71,7 +78,7 @@
                                 <a href="{{ route('admin.registrations.edit', $reg->registrationid) }}" class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed rounded-lg">
                                     <span class="material-symbols-outlined">edit</span>
                                 </a>
-                                <form action="{{ route('admin.registrations.destroy', $reg->registrationid) }}" method="POST" onsubmit="return confirm('Delete this registration record?')">
+                                <form action="{{ route('admin.registrations.destroy', $reg->registrationid) }}" method="POST" onsubmit="return confirm('Xóa bản ghi đăng ký này?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 text-on-surface-variant hover:text-error transition-colors hover:bg-error-container rounded-lg">
@@ -83,7 +90,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">No registration records found.</td>
+                        <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">Không tìm thấy bản ghi đăng ký nào.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -94,5 +101,5 @@
             {{ $registrations->links() }}
         </div>
     </div>
-</main>
+</div>
 @endsection

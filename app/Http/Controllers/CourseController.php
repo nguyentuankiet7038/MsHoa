@@ -8,8 +8,30 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {   
-    public function index() {
-        $courses = Course::paginate(10);
+    public function index(Request $request) {
+        $query = Course::query(); // Show all courses to see 11 records
+
+        // Filter by category (search in name for simplicity)
+        if ($request->has('category') && $request->category != 'Tất cả') {
+            $query->where('coursename', 'like', '%' . $request->category . '%');
+        }
+
+        // Sorting
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $courses = $query->paginate(12)->withQueryString();
         return view('pages.courses', compact('courses'));
     }
 

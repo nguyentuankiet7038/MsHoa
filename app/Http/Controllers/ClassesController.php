@@ -81,24 +81,12 @@ class ClassesController extends Controller
     public function getAvailableStudents(Request $request)
     {
         $courseId = $request->course_id;
-        $schedule = $request->schedule; // Standard format: "2,4,6|18:00-20:00"
 
-        // Find approved students for this course
+        // Find approved students for this course who are not yet in a class
         $registrations = RegistrationCourse::with('student.user')
             ->where('status', 'approved')
-            // Add logic here to filter students who are in classes matching the course but maybe not yet in a class
-            // or just list all approved students for this course.
-            // The user wants to filter students registered for this course.
-            ->whereHas('class', function($q) use ($courseId) {
-                // This might be tricky if they are already in a class.
-                // Assuming we want students approved for this course who aren't in a class yet, or just list all approved.
-            })
-            // Let's simplify: Get students approved for this specific course.
-            // Need a way to link RegistrationCourse to Course. 
-            // RegistrationCourse belongs to Classes, Classes belongs to Course.
-            ->whereHas('class.course', function($q) use ($courseId) {
-                $q->where('courseid', $courseId);
-            })
+            ->where('courseid', $courseId)
+            ->whereNull('classid')
             ->get();
 
         return response()->json($registrations);
@@ -139,9 +127,7 @@ class ClassesController extends Controller
 
         if ($request->has('student_ids')) {
             RegistrationCourse::whereIn('studentid', $request->student_ids)
-                ->whereHas('class', function($q) use ($request) {
-                    $q->where('courseid', $request->courseid);
-                })
+                ->where('courseid', $request->courseid)
                 ->update(['classid' => $class->classid]);
         }
 
@@ -156,16 +142,8 @@ class ClassesController extends Controller
         foreach ($classes as $class) {
             // 1. Find approved students for this class's course who are NOT assigned to a class yet
             $students = RegistrationCourse::where('status', 'approved')
-                // Logic to find registrations for this course. 
-                // Since RegistrationCourse points to a class, we need to find registrations 
-                // where the current class's course matches the registration's intended course.
-                // Assuming we have a way to know which course a registration is for if classid is null/placeholder.
-                // If registration_courses always has a classid, maybe we look for registrations in "placeholder" classes?
-                // Or maybe RegistrationCourse should have course_id directly.
-                ->whereHas('class', function($q) use ($class) {
-                    $q->where('courseid', $class->courseid);
-                })
-                ->where('classid', '!=', $class->classid) // Avoid re-assigning same class
+                ->where('courseid', $class->courseid)
+                ->whereNull('classid')
                 ->get();
 
             foreach ($students as $student) {
@@ -173,9 +151,6 @@ class ClassesController extends Controller
                     $student->update(['classid' => $class->classid]);
                 }
             }
-
-            // 2. Assign teacher if not already assigned or if we want to auto-assign
-            // (The user said "cả giáo viên và học sinh đều phải có lọc không trùng lịch")
         }
 
         return response()->json(['success' => true]);

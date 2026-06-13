@@ -1,3 +1,118 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* Nút nhấn có màu -> Chuyển sang màu đỏ */
+    button.bg-primary, 
+    a.bg-primary,
+    button.bg-brand-turquoise, 
+    a.bg-brand-turquoise,
+    button.btn-turquoise, 
+    a.btn-turquoise,
+    button.support-bg-accent, 
+    a.support-bg-accent,
+    button.bg-accent-turquoise, 
+    a.bg-accent-turquoise,
+    button[class*="bg-[#00C2CB]"],
+    a[class*="bg-[#00C2CB]"],
+    button[class*="bg-brand-turquoise"],
+    a[class*="bg-brand-turquoise"],
+    .turquoise-primary {
+        background-color: #dc2626 !important;
+        color: white !important;
+    }
+
+    button.bg-primary:hover, 
+    a.bg-primary:hover,
+    button.bg-brand-turquoise:hover, 
+    a.bg-brand-turquoise:hover,
+    button.btn-turquoise:hover, 
+    a.btn-turquoise:hover,
+    button.support-bg-accent:hover, 
+    a.support-bg-accent:hover,
+    button.bg-accent-turquoise:hover, 
+    a.bg-accent-turquoise:hover {
+        background-color: #b91c1c !important;
+    }
+
+    /* Nút không màu -> Viền xanh ngọc bích */
+    button.border-primary, 
+    a.border-primary,
+    button.border-accent-turquoise, 
+    a.border-accent-turquoise,
+    button.border-brand-turquoise, 
+    a.border-brand-turquoise,
+    button.border-outline-variant,
+    a.border-outline-variant,
+    .turquoise-border {
+        border-color: #00C2CB !important;
+        color: #00C2CB !important;
+        background-color: transparent !important;
+    }
+
+    button.border-primary:hover, 
+    a.border-primary:hover,
+    button.border-accent-turquoise:hover, 
+    a.border-accent-turquoise:hover,
+    button.border-brand-turquoise:hover, 
+    a.border-brand-turquoise:hover {
+        background-color: rgba(255, 69, 0, 0.1) !important;
+    }
+
+    /* Tiêu đề màu xanh ngọc */
+    h1, h2, h3, h4, h5, h6, 
+    .text-primary, 
+    .text-on-surface,
+    [class*="text-primary"] {
+        color: #00C2CB !important;
+    }
+
+    /* Nền màu đỏ cam (nhạt để dễ đọc hoặc đậm tùy vị trí) */
+    body, 
+    .bg-surface, 
+    .bg-background, 
+    .bg-surface-container-low {
+        background-color: #FFF5F2 !important; /* Màu đỏ cam cực nhạt cho nền chính */
+    }
+
+    .bg-primary, 
+    .bg-primary-container,
+    .bg-surface-container-highest {
+        background-color: #FF4500 !important;
+        color: white !important;
+    }
+
+    /* Chữ trong footer và thanh bản quyền màu trắng */
+    footer, 
+    footer *, 
+    .bg-surface-container-highest * {
+        color: white !important;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+
+    /* Trang Support: Chữ không nền cam sẽ là đen và trắng */
+    .support-page h1, 
+    .support-page h2, 
+    ...
+    .support-page label {
+        color: #1a1a1a !important; /* Đen cho các vùng không nền cam */
+    }
+
+    /* Khung nền "How can we help..." màu xanh ngọc */
+    .support-page .bg-primary-container {
+        background-color: #00C2CB !important;
+    }
+
+    /* Nếu có nền cam/đỏ/xanh ngọc thì chữ trắng */
+    .support-page .bg-primary *, 
+    .support-page .bg-primary-container *,
+    .support-page .support-bg-accent *,
+    .support-page .bg-secondary-container * {
+        color: white !important;
+    }
+}

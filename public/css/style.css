@@ -16,9 +16,9 @@ trang courese-detail
 .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .turquoise-primary { background-color: #008B8B; }
-        .turquoise-text { color: #008B8B; }
-        .turquoise-border { border-color: #008B8B; }
+        .turquoise-primary { background-color: #dc2626 !important; color: white !important; }
+        .turquoise-text { color: #00C2CB !important; }
+        .turquoise-border { border-color: #00C2CB !important; color: #00C2CB !important; }
 
 /**
 trang support
@@ -26,6 +26,6 @@ trang support
  .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .support-accent { color: #008080; } /* Turquoise requirement */
-        .support-bg-accent { background-color: #008080; }
-        .support-border-accent { border-color: #008080; }
+        .support-accent { color: #00C2CB; } /* Turquoise requirement */
+        .support-bg-accent { background-color: #dc2626 !important; color: white !important; }
+        .support-border-accent { border-color: #00C2CB !important; color: #00C2CB !important; }

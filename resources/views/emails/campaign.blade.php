@@ -9,13 +9,13 @@
             <img src="{{ $template->thumbnail_url }}" alt="{{ $template->name }}" style="width: 100%; border-radius: 10px 10px 0 0; margin-bottom: 20px;">
         @endif
         
-        <h2 style="color: #4f378a;">{{ $campaign->name }}</h2>
+        <h2 style="color: #00C2CB;">{{ $campaign->name }}</h2>
         
         <p>Chào bạn,</p>
         
         <p>Chúng tôi có một thông báo mới dành cho bạn:</p>
         
-        <div style="background-color: #f2ecf4; padding: 15px; border-left: 4px solid #4f378a; margin: 20px 0;">
+        <div style="background-color: #E6F4F5; padding: 15px; border-left: 4px solid #00C2CB; margin: 20px 0;">
             <strong>{{ $campaign->name }}</strong>
             <p>Loại chiến dịch: {{ $campaign->type }}</p>
         </div>
@@ -27,7 +27,7 @@
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
         <p style="font-size: 12px; color: #777; text-align: center;">
-            © 2024 Ms. Hoa English Center. All rights reserved.
+            © 2024 Trung tâm Tiếng Anh Ms. Hoa. Bảo lưu mọi quyền.
         </p>
     </div>
 </body>

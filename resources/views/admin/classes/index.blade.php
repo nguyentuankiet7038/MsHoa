@@ -4,17 +4,17 @@
 <main class="p-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-            <h1 class="text-3xl font-headline font-black text-on-surface">Class Management</h1>
-            <p class="text-on-surface-variant mt-1">Organize classes and manage student assignments.</p>
+            <h1 class="text-3xl font-headline font-black text-on-surface">Quản lý lớp học</h1>
+            <p class="text-on-surface-variant mt-1">Tổ chức các lớp học và quản lý phân bổ học sinh.</p>
         </div>
         <div class="flex gap-4">
             <button onclick="openAutoArrangeModal()" class="flex items-center justify-center gap-2 px-6 py-4 bg-secondary text-on-secondary rounded-xl font-bold shadow-lg hover:brightness-105 transition-all active:scale-95">
                 <span class="material-symbols-outlined">auto_fix</span>
-                Auto Arrange
+                Tự động sắp xếp
             </button>
             <a href="{{ route('admin.classes.create') }}" class="flex items-center justify-center gap-2 px-6 py-4 bg-primary text-on-primary rounded-xl font-bold shadow-lg hover:brightness-105 transition-all active:scale-95">
                 <span class="material-symbols-outlined">add_circle</span>
-                New Class
+                Lớp mới
             </a>
         </div>
     </div>
@@ -30,11 +30,11 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-surface-container-high border-b border-outline-variant">
                     <tr>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Class Name</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Course</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Teacher</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Schedule</th>
-                        <th class="px-6 py-4 text-label-large font-bold text-on-surface text-right">Actions</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Tên lớp</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Khóa học</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Giáo viên</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface">Lịch học</th>
+                        <th class="px-6 py-4 text-label-large font-bold text-on-surface text-right">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant">
@@ -42,13 +42,13 @@
                     <tr class="hover:bg-surface-container transition-colors group">
                         <td class="px-6 py-4">
                             <p class="font-bold text-on-surface">{{ $class->classname }}</p>
-                            <p class="text-xs text-on-surface-variant">Dates: {{ $class->start_date }} to {{ $class->end_date }}</p>
+                            <p class="text-xs text-on-surface-variant">Ngày: {{ $class->start_date }} đến {{ $class->end_date }}</p>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant">{{ $class->course->coursename ?? 'N/A' }}</td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary text-sm">person</span>
-                                <span class="text-sm font-medium">{{ $class->teacher->user->fullname ?? 'Unassigned' }}</span>
+                                <span class="text-sm font-medium">{{ $class->teacher->user->fullname ?? 'Chưa phân công' }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -64,7 +64,7 @@
                                 <a href="{{ route('admin.classes.edit', $class->classid) }}" class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed rounded-lg">
                                     <span class="material-symbols-outlined">edit</span>
                                 </a>
-                                <form action="{{ route('admin.classes.destroy', $class->classid) }}" method="POST" onsubmit="return confirm('Delete this class?')">
+                                <form action="{{ route('admin.classes.destroy', $class->classid) }}" method="POST" onsubmit="return confirm('Xóa lớp học này?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 text-on-surface-variant hover:text-error transition-colors hover:bg-error-container rounded-lg">
@@ -76,7 +76,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-on-surface-variant">No classes found.</td>
+                        <td colspan="5" class="px-6 py-8 text-center text-on-surface-variant">Không tìm thấy lớp học nào.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -86,14 +86,14 @@
             {{ $classes->links() }}
         </div>
     </div>
-</main>
+</div>
 
 <!-- Auto Arrange Modal -->
 <div id="autoArrangeModal" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-white rounded-[2.5rem] p-8 max-w-lg w-full shadow-2xl flex flex-col max-h-[85vh]">
         <div class="flex-shrink-0 mb-6">
-            <h3 class="text-2xl font-black text-on-surface">Auto Arrange Classes</h3>
-            <p class="text-on-surface-variant text-sm mt-1">Select classes to automatically assign approved students and available teachers.</p>
+            <h3 class="text-2xl font-black text-on-surface">Tự động sắp xếp lớp học</h3>
+            <p class="text-on-surface-variant text-sm mt-1">Chọn các lớp để tự động phân bổ học sinh đã duyệt và giáo viên có sẵn.</p>
         </div>
         
         <form id="autoArrangeForm" class="flex flex-col min-h-0 flex-grow">
@@ -117,10 +117,10 @@
             </div>
             
             <div class="flex justify-end gap-3 pt-6 border-t border-outline-variant flex-shrink-0">
-                <button type="button" onclick="closeAutoArrangeModal()" class="px-8 py-3 font-bold text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">Cancel</button>
+                <button type="button" onclick="closeAutoArrangeModal()" class="px-8 py-3 font-bold text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">Hủy</button>
                 <button type="submit" class="bg-primary text-on-primary px-10 py-3 rounded-full font-bold shadow-lg hover:brightness-110 transition-all active:scale-95 flex items-center gap-2">
                     <span class="material-symbols-outlined">magic_button</span>
-                    Start Auto
+                    Bắt đầu tự động
                 </button>
             </div>
         </form>
@@ -139,7 +139,7 @@
         border-radius: 10px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #4f378a;
+        background: #00C2CB;
     }
 </style>
 
@@ -172,13 +172,13 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Auto-arrangement completed successfully!');
+                alert('Hoàn tất tự động sắp xếp thành công!');
                 location.reload();
             }
         })
         .catch(err => {
             console.error(err);
-            alert('An error occurred during auto-arrangement.');
+            alert('Có lỗi xảy ra trong quá trình tự động sắp xếp.');
         });
     });
 </script>

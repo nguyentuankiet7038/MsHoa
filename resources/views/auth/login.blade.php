@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login')
+@section('title', 'Đăng nhập')
 
 @section('content')
 @if($errors->any())
@@ -34,8 +34,8 @@
             <div class="w-16 h-16 bg-brand-turquoise/10 flex items-center justify-center rounded-full mb-4">
                 <span class="material-symbols-outlined text-brand-turquoise text-4xl" style="font-variation-settings: 'FILL' 1;">school</span>
             </div>
-            <h1 class="text-2xl font-display font-bold text-on-surface">Welcome Back</h1>
-            <p class="text-on-surface-variant text-sm mt-1">Access your learning dashboard</p>
+            <h1 class="text-2xl font-display font-bold text-on-surface">Chào mừng trở lại</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Truy cập bảng điều khiển học tập của bạn</p>
         </div>
 
         <!-- Bắt đầu form đăng nhập Laravel -->
@@ -43,7 +43,7 @@
             @csrf <!-- BẢO MẬT BẮT BUỘC CỦA LARAVEL (tạo token nhận diện form) -->
 
             <div class="space-y-1.5">
-                <label class="text-sm font-medium text-on-surface-variant block ml-1" for="email">Email Address</label>
+                <label class="text-sm font-medium text-on-surface-variant block ml-1" for="email">Địa chỉ Email</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
                     
@@ -55,8 +55,8 @@
 
             <div class="space-y-1.5">
                 <div class="flex justify-between items-center px-1">
-                    <label class="text-sm font-medium text-on-surface-variant block" for="password">Password</label>
-                    <a class="text-xs font-semibold text-primary hover:underline" href="#">Forgot Password?</a>
+                    <label class="text-sm font-medium text-on-surface-variant block" for="password">Mật khẩu</label>
+                    <a class="text-xs font-semibold text-primary hover:underline" href="#">Quên mật khẩu?</a>
                 </div>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
@@ -76,7 +76,7 @@
             </div>
 
             <button class="w-full py-3.5 bg-brand-turquoise hover:bg-opacity-90 text-white font-bold rounded-lg shadow-lg shadow-brand-turquoise/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4" type="submit">
-                Sign In
+                Đăng nhập
                 <span class="material-symbols-outlined text-lg">login</span>
             </button>
         </form>
@@ -87,14 +87,14 @@
                 <div class="w-full border-t border-outline-variant"></div>
             </div>
             <div class="relative flex justify-center text-xs uppercase">
-                <span class="bg-white px-2 text-on-surface-variant font-medium">Or continue with</span>
+                <span class="bg-white px-2 text-on-surface-variant font-medium">Hoặc tiếp tục với</span>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <button class="flex items-center justify-center gap-2 py-3 px-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors active:scale-95">
-                <img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5xCE9VhAMCddwBlwx8rGDvuoS9Nq4luh4DCnkk1PriKHUB8YXiQHHUj7qU_JM4g-6sq98-9UdiwWe7JSxyk4WgyH2p9NT-Kywcdfqa5INo8KSzzaT2I3uv9FYgTe7d6BPULZpuFCfqK3WRyWyZP5DAe0AJFvvGTfaJIul8kUHnAtCn4_ciTByrU278FIiWvVsToH3G4MibgCSM_gcO34YmMWypsBi4fgRCovGL74bWwK86AJsr6EbsRxYNXuVAqTG21e8By_cTbY"/>
-                <span class="text-sm font-semibold text-on-surface">Google</span>
+            <button class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-outline-variant rounded-xl hover:bg-surface-container transition-all" type="button">
+                <img alt="Logo Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK58qfgY5ZVynkcmgPPFjT3PzYHsPV01O3jqlJ3ggEYlLQPXTc1yzkGtEsOkeJNlx_DygjSlfDlVeX_3p5aPhU5bKbvWIQRGDCqjHufqJTzRMoCXkibHor9H_X7P0El2_b5ff-hE6cgbZVSadaH4cjKDG67kHzXaS-0kENnTKV8V8mf3eurl6zJJ2LN5i5sETyV0YI3giZqmH77-HMQmSL4bLJtdjfbC0g_0g-WZB01rjqx2_S6EF_RCaWy6l1z3dYKw_TR-cr_Hc"/>
+                <span class="text-sm font-bold text-on-surface">Tiếp tục với Google</span>
             </button>
             <button class="flex items-center justify-center gap-2 py-3 px-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors active:scale-95">
                 <svg class="w-5 h-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
@@ -106,8 +106,8 @@
 
         <div class="mt-8 text-center">
             <p class="text-on-surface-variant text-sm">
-                New to Ms. Hoa English? 
-                <a class="text-primary font-bold hover:underline ml-1" href="/register">Register Now</a>
+                Mới sử dụng Ms. Hoa English? 
+                <a class="text-primary font-bold hover:underline ml-1" href="/register">Đăng ký ngay</a>
             </p>
         </div>
     </div>

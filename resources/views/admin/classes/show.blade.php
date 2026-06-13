@@ -7,10 +7,10 @@
             <div>
                 <a href="{{ route('admin.classes.index') }}" class="text-on-surface-variant hover:text-primary flex items-center gap-1 mb-2">
                     <span class="material-symbols-outlined text-sm">arrow_back</span>
-                    Back to Classes
+                    Quay lại danh sách lớp
                 </a>
                 <h1 class="text-3xl font-headline font-black text-on-surface">{{ $class->classname }}</h1>
-                <p class="text-on-surface-variant mt-1">Detailed student list and class information.</p>
+                <p class="text-on-surface-variant mt-1">Danh sách học sinh chi tiết và thông tin lớp học.</p>
             </div>
             <div class="flex gap-3">
                 <button onclick="window.print()" class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-container-highest transition-all">
@@ -90,7 +90,7 @@
             </table>
         </div>
     </div>
-</main>
+</div>
 
 <style>
     @media print {

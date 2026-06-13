@@ -16,6 +16,11 @@ class RegistrationCourse extends Model
         return $this->belongsTo(Classes::class, 'classid', 'classid');
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'courseid', 'courseid');
+    }
+
     public function student()
     {
         return $this->belongsTo(Student::class, 'studentid', 'studentid');
@@ -23,6 +28,7 @@ class RegistrationCourse extends Model
 
     protected $fillable = [
         'studentid',
+        'courseid',
         'classid',
         'registration_date',
         'status',
