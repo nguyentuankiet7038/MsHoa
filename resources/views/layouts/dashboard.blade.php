@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng điều khiển Admin - @yield('title')</title>
+    <title>Bảng điều khiển - @yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
@@ -23,7 +23,6 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e6e0e9; border-radius: 10px; }
 
-        /* Sync with Tailwind colors used in child pages if needed */
         :root {
             --primary: #00C2CB;
             --on-primary: #ffffff;
@@ -43,16 +42,19 @@
                     <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">MH</div>
                     <div>
                         <p class="text-sm font-headline font-bold text-on-surface">Ms. Hoa English</p>
-                        <p class="text-xs text-on-surface-variant italic">Admin Dashboard</p>
+                        <p class="text-xs text-on-surface-variant italic capitalize">{{ auth()->user()->role }} Panel</p>
                     </div>
                 </div>
             </div>
             
             <nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+                <!-- Shared -->
                 <a class="flex items-center {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} rounded-xl font-bold px-4 py-3 mx-2 transition-all hover:bg-primary/5 active:scale-95" href="{{ route('dashboard') }}">
                     <span class="material-symbols-outlined mr-3">dashboard</span>
                     <span class="font-body text-label-medium">Tổng quan</span>
                 </a>
+
+                @if(auth()->user()->role == 'admin')
                 <a class="flex items-center {{ request()->routeIs('admin.courses*') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{ route('admin.courses') }}">
                     <span class="material-symbols-outlined mr-3">menu_book</span>
                     <span class="font-body text-label-medium">Khóa học</span>
@@ -65,10 +67,15 @@
                     <span class="material-symbols-outlined mr-3">person</span>
                     <span class="font-body text-label-medium">Giáo viên</span>
                 </a>
+                @endif
+
+                <!-- Consultant & Admin -->
                 <a class="flex items-center {{ request()->routeIs('admin.registrations.*') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{ route('admin.registrations.index') }}">
                     <span class="material-symbols-outlined mr-3">how_to_reg</span>
                     <span class="font-body text-label-medium">Đăng ký</span>
                 </a>
+
+                @if(auth()->user()->role == 'admin')
                 <a class="flex items-center {{ request()->routeIs('admin.classes.*') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{ route('admin.classes.index') }}">
                     <span class="material-symbols-outlined mr-3">class</span>
                     <span class="font-body text-label-medium">Lớp học</span>
@@ -81,6 +88,9 @@
                     <span class="material-symbols-outlined mr-3">mail</span>
                     <span class="font-body text-label-medium">Tiếp thị</span>
                 </a>
+                @endif
+
+                <!-- Consultant & Admin -->
                 <a class="flex items-center {{ request()->routeIs('payment.admin') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{route('payment.admin')}}">
                     <span class="material-symbols-outlined mr-3">payments</span>
                     <span class="font-body text-label-medium">Thanh toán</span>
