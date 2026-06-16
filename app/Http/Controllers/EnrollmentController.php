@@ -12,7 +12,7 @@ class EnrollmentController extends Controller
 {
     public function index()
     {
-        $registrations = RegistrationCourse::with(['student.user', 'class.course'])
+        $registrations = RegistrationCourse::with(['student.user', 'class.course', 'course'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             
@@ -46,6 +46,7 @@ class EnrollmentController extends Controller
                 'parentname' => $request->guardian_name,
                 'parentphone' => $request->guardian_phone,
                 // address could be added here if in the form
+                'address' => $request->address??'Chưa có thông tin',
             ]
         );
 

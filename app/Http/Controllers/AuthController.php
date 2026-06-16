@@ -58,7 +58,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:255', 'unique:users'],
@@ -69,19 +69,28 @@ class AuthController extends Controller
             'phone.unique' => 'Số điện thoại đã tồn tại',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-        ]
-        );
-
-
-        User::create([
-            'fullName' => $request->full_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone
         ]);
 
-        //Auth::login($user); tự động đăng nhập
+        $otp = rand(100000, 999999);
+        $registerData = [
+            'fullname' => $request->full_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'role' => 'user' // default
+        ];
 
-        return redirect('/login');
+        session()->put('register_data', $registerData);
+        session()->put('otp', $otp);
+        session()->put('otp_time', now());
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OtpMail($otp));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Lỗi gửi OTP: ' . $e->getMessage());
+            // Optionally, we could still redirect or show an error. We'll proceed so testing is easier (check log).
+        }
+
+        return redirect()->route('otp.show')->with('success', 'Mã OTP đã được gửi đến email của bạn.');
     }
 }

@@ -46,8 +46,8 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="font-semibold text-on-surface">{{ $reg->class->course->coursename ?? 'Không có khóa học' }}</p>
-                            <p class="text-xs text-on-surface-variant">Lớp: {{ $reg->class->classname ?? 'Không có lớp học' }}</p>
+                            <p class="font-semibold text-on-surface">{{ $reg->course->coursename ?? 'Không có khóa học' }}</p>
+                            <p class="text-xs text-on-surface-variant">Lớp: {{ $reg->class->classname ?? $reg->class->course->coursename ?? 'Chưa có lớp học' }}</p>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant text-sm">
                             {{ \Carbon\Carbon::parse($reg->registration_date)->format('d/m/Y') }}

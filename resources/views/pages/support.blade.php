@@ -19,8 +19,8 @@
        
     </div>
     <!-- Right Column: Live Chat Interface -->
-    <div class="lg:col-span-4 h-full">
-        <div class="bg-white rounded-xl shadow-xl border border-outline-variant h-full flex flex-col overflow-hidden sticky top-24">
+    <div class="lg:col-span-4">
+        <div class="bg-white rounded-xl shadow-xl border border-outline-variant flex flex-col overflow-hidden sticky top-24 h-[600px]">
             <!-- Chat Header -->
             <div class="support-bg-accent p-4 flex justify-between items-center text-white">
                 <div class="flex items-center gap-3">

@@ -107,7 +107,7 @@
         <div class="mt-8 text-center">
             <p class="text-on-surface-variant text-sm">
                 Mới sử dụng Ms. Hoa English? 
-                <a class="text-primary font-bold hover:underline ml-1" href="/register">Đăng ký ngay</a>
+                <a class="text-primary font-bold hover:underline ml-1" href="{{ route('form.register') }}">Đăng ký ngay</a>
             </p>
         </div>
     </div>

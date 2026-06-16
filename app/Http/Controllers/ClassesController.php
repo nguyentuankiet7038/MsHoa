@@ -163,4 +163,57 @@ class ClassesController extends Controller
         // It would involve checking all classes the student/teacher is already in.
         return false; 
     }
+
+    public function edit($id)
+    {
+        $class = Classes::with(['course', 'teacher.user', 'registrations.student.user'])->findOrFail($id);
+        $courses = Course::all();
+        return view('admin.classes.edit', compact('class', 'courses'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'classname' => 'required',
+            'courseid' => 'required',
+            'teacherid' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'schedule' => 'required',
+        ]);
+
+        $class = Classes::findOrFail($id);
+        $class->update($request->only([
+            'classname', 'courseid', 'teacherid', 'start_date', 'end_date', 'schedule'
+        ]));
+
+        // Gỡ học sinh khỏi lớp
+        if ($request->has('remove_student_ids')) {
+            RegistrationCourse::whereIn('studentid', $request->remove_student_ids)
+                ->where('classid', $id)
+                ->update(['classid' => null]);
+        }
+
+        // Thêm học sinh mới vào lớp
+        if ($request->has('add_student_ids')) {
+            RegistrationCourse::whereIn('studentid', $request->add_student_ids)
+                ->where('courseid', $request->courseid)
+                ->update(['classid' => $id]);
+        }
+
+        return redirect()->route('admin.classes.index')->with('success', 'Cập nhật thông tin lớp học thành công.');
+    }
+
+    public function destroy($id)
+    {
+        $class = Classes::findOrFail($id);
+        
+        // Trả học sinh về trạng thái chưa xếp lớp
+        RegistrationCourse::where('classid', $id)->update(['classid' => null]);
+        
+        // Xóa lớp
+        $class->delete();
+
+        return redirect()->route('admin.classes.index')->with('success', 'Xóa lớp học thành công.');
+    }
 }

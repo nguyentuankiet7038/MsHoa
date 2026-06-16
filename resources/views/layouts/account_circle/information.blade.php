@@ -72,10 +72,18 @@
 
     <!-- Actions Section -->
     <div class="bg-surface-container-low p-4 space-y-2 border-t border-outline-variant">
+        <a href="{{ route('profile.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white transition-all group">
+            <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">manage_accounts</span>
+            <span class="font-bold text-on-surface">Hồ sơ cá nhân</span>
+        </a>
         @if($user->role === 'student')
             <a href="{{ route('student.grades') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white transition-all group">
                 <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">grade</span>
                 <span class="font-bold text-on-surface">Xem điểm học tập</span>
+            </a>
+            <a href="{{ route('student.courses') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white transition-all group">
+                <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">history_edu</span>
+                <span class="font-bold text-on-surface">Lịch sử khóa học & Đánh giá</span>
             </a>
         @endif
 

@@ -29,15 +29,32 @@ Route::get('/course/{id}', [CourseController::class, 'show'])->name('courses.sho
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('form.login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('form.register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// --- OTP ROUTES ---
+Route::get('/otp', [\App\Http\Controllers\OtpController::class, 'show'])->name('otp.show');
+Route::post('/otp/verify', [\App\Http\Controllers\OtpController::class, 'verify'])->name('otp.verify');
+Route::post('/otp/resend', [\App\Http\Controllers\OtpController::class, 'resend'])->name('otp.resend');
+
+// --- AUTHENTICATED USER ROUTES ---
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
+
 // --- STUDENT ROUTES ---
 Route::middleware(['auth', 'role:student,user'])->group(function () {
-    Route::post('/registration/{id}', [EnrollmentController::class, 'enrollmentCourse'])->name('enrollments.registration');
-    Route::get('/my-grades', [LearningProgressController::class, 'studentIndex'])->name('student.grades');
-    Route::get('/support', [SupportController::class, 'index'])->name('support');
-    Route::post('/support/chat', [SupportController::class, 'chat'])->name('support.chat');
+    Route::post('/registration/{id}', [App\Http\Controllers\EnrollmentController::class, 'enrollmentCourse'])->name('enrollments.registration');
+    Route::get('/my-grades', [App\Http\Controllers\LearningProgressController::class, 'studentIndex'])->name('student.grades');
+    Route::get('/support', [App\Http\Controllers\SupportController::class, 'index'])->name('support');
+    Route::post('/support/chat', [App\Http\Controllers\SupportController::class, 'chat'])->name('support.chat');
+    
+    // Feedback & Course History
+    Route::get('/my-courses', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('student.courses');
+    Route::get('/feedback/create/{classid}', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback/store/{classid}', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
 });
 
 // --- TEACHER ROUTES ---
@@ -129,14 +146,15 @@ Route::middleware(['auth', 'role:admin,consultant'])->prefix('dashboard')->group
             Route::get('/', [ClassesController::class, 'index'])->name('admin.classes.index');
             Route::get('/create', [ClassesController::class, 'create'])->name('admin.classes.create');
             Route::post('/', [ClassesController::class, 'store'])->name('admin.classes.store');
+            Route::get('/get-students', [ClassesController::class, 'getAvailableStudents'])->name('admin.classes.getStudents');
+            Route::get('/get-teachers', [ClassesController::class, 'getAvailableTeachers'])->name('admin.classes.getTeachers');
+            Route::post('/auto-arrange', [ClassesController::class, 'autoArrange'])->name('admin.classes.autoArrange');
+            
             Route::get('/{id}', [ClassesController::class, 'show'])->name('admin.classes.show');
             Route::get('/{id}/edit', [ClassesController::class, 'edit'])->name('admin.classes.edit');
             Route::put('/{id}', [ClassesController::class, 'update'])->name('admin.classes.update');
             Route::delete('/{id}', [ClassesController::class, 'destroy'])->name('admin.classes.destroy');
             Route::get('/{id}/export', [ClassesController::class, 'exportExcel'])->name('admin.classes.export');
-            Route::get('/get-students', [ClassesController::class, 'getAvailableStudents'])->name('admin.classes.getStudents');
-            Route::get('/get-teachers', [ClassesController::class, 'getAvailableTeachers'])->name('admin.classes.getTeachers');
-            Route::post('/auto-arrange', [ClassesController::class, 'autoArrange'])->name('admin.classes.autoArrange');
         });
 
         // Help Center (Admin can edit training data)
