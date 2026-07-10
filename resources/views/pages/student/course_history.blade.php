@@ -69,7 +69,7 @@
                         <!-- Course Image (optional fallback if image is missing) -->
                         <div class="h-40 bg-surface-container relative">
                             @if($course->image)
-                                <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->coursename }}" class="w-full h-full object-cover">
+                                <img src="{{ asset($course->image) }}" alt="{{ $course->coursename }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-primary to-secondary opacity-80"></div>
                             @endif

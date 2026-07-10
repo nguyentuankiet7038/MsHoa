@@ -13,7 +13,7 @@ class CourseController extends Controller
 
         // Filter by category (search in name for simplicity)
         if ($request->has('category') && $request->category != 'Tất cả') {
-            $query->where('coursename', 'like', '%' . $request->category . '%');
+            $query->where('level', 'like', '%' . $request->category . '%');
         }
 
         // Sorting
@@ -89,6 +89,8 @@ class CourseController extends Controller
             $imageName = time().'.'.$request->image->extension();  
             $request->image->move(public_path('images'), $imageName);
             $data['image'] = 'images/'.$imageName;
+        } else {
+            $data['image'] = 'images/cousedefault.png';
         }
 
         Course::create($data);

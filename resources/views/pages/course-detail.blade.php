@@ -243,7 +243,7 @@
                     <label for="guardian_phone" class="text-xs font-semibold text-on-surface-variant">
                         SĐT người giám hộ <span class="text-error">*</span>
                     </label>
-                    <input type="tel" id="guardian_phone" name="guardian_phone"
+                    <input type="number" maxlength="10" id="guardian_phone" name="guardian_phone"
                         value="{{ old('guardian_phone') }}"
                         placeholder="0909 123 456"
                         class="w-full px-4 py-2.5 rounded-xl border @error('guardian_phone') border-error @else border-outline-variant @enderror bg-surface-container text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-custom-turquoise focus:ring-2 focus:ring-custom-turquoise/20 transition-all">

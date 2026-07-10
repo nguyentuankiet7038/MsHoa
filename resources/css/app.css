@@ -65,7 +65,7 @@
     .text-primary, 
     .text-on-surface,
     [class*="text-primary"] {
-        color: #00C2CB !important;
+        color: #000000 !important;
     }
 
     /* Nền màu đỏ cam (nhạt để dễ đọc hoặc đậm tùy vị trí) */
@@ -87,7 +87,7 @@
     footer, 
     footer *, 
     .bg-surface-container-highest * {
-        color: white !important;
+        color: rgb(0, 0, 0) !important;
     }
 
     footer a:hover {
@@ -98,7 +98,7 @@
     /* Trang Support: Chữ không nền cam sẽ là đen và trắng */
     .support-page h1, 
     .support-page h2, 
-    ...
+   
     .support-page label {
         color: #1a1a1a !important; /* Đen cho các vùng không nền cam */
     }

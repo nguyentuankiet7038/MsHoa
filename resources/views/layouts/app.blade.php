@@ -34,10 +34,10 @@
                     </ul>
                 </div>
                 <div class="navbar__actions">
-                    <div class="navbar__search">
+                    <!-- <div class="navbar__search">
                         <span class="material-symbols-outlined">search</span>
                         <input type="text" placeholder="Tìm kiếm khóa học..." />
-                    </div>
+                    </div> -->
                     <button class="navbar__icon-btn">
                         <span class="material-symbols-outlined">notifications</span>
                     </button>

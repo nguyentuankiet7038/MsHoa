@@ -40,7 +40,7 @@
             <div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 scrollbar-hide">
                 @php $currentCat = request('category', 'Tất cả'); @endphp
                 @foreach(['Tất cả', 'TOEIC', 'IELTS', 'Giao tiếp', 'Tiếng Anh trẻ em'] as $cat)
-                <a href="{{ request()->fullUrlWithQuery(['category' => $cat]) }}" 
+                <a href="{{ request()->fullUrlWithQuery(['category' => $cat, 'page' => null]) }}" 
                    class="whitespace-nowrap px-6 py-2 rounded-full {{ $currentCat == $cat ? 'bg-primary text-on-primary font-bold' : 'bg-surface-container-high text-on-surface-variant font-medium hover:bg-primary-container hover:text-on-primary-container' }} text-sm transition-colors">
                     {{ $cat }}
                 </a>

@@ -21,7 +21,9 @@
             <div class="bg-white rounded-[2rem] overflow-hidden shadow-xl border border-outline-variant transition-transform hover:scale-[1.02]">
                 <div class="bg-[#dc2626] p-6 text-white">
                     <h3 class="text-xl font-black">{{ $class->classname }}</h3>
-                    <p class="text-sm opacity-80">{{ $class->course->coursename }}</p>
+<p class="text-sm opacity-80">
+    {{ $class->course->coursename ?? 'Chưa có khóa học' }}
+</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <div class="flex items-center gap-3">

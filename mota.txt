@@ -1,0 +1,58 @@
+Dựa vào việc quét mã nguồn dự án (cụ thể là `composer.json` và `routes/web.php` cùng với cấu trúc thư mục), dưới đây là danh sách các chức năng hiện có của dự án cùng mô tả chi tiết:
+
+### I. CÔNG NGHỆ SỬ DỤNG
+1. **Backend:** 
+   - Framework: Laravel (Phiên bản ^9.19) - PHP (^8.0.2).
+   - Xác thực (Authentication): Laravel Sanctum (cho API auth) và Firebase PHP-JWT (có thể dùng cho xác thực OTP hoặc quản lý token).
+   - HTTP Client: GuzzleHTTP (để gọi API từ bên ngoài nếu cần).
+2. **Frontend:**
+   - Templating: Blade (Template Engine của Laravel).
+   - Styling & Build tools: TailwindCSS, PostCSS, Vite (dựa trên các file `tailwind.config.js`, `vite.config.js`, `postcss.config.js` ở thư mục gốc).
+3. **Database:** 
+   - Sử dụng các hệ quản trị cơ sở dữ liệu quan hệ được Laravel hỗ trợ mặc định (như MySQL).
+
+---
+
+### II. CÁC CHỨC NĂNG CỦA DỰ ÁN VÀ VẤN ĐỀ GIẢI QUYẾT
+
+Dự án này là một **Hệ thống Quản lý Trung tâm Đào tạo / Tiếng Anh** phân quyền chi tiết với 4 vai trò chính: Học viên (Student), Giáo viên (Teacher), Tư vấn viên (Consultant), Quản trị viên (Admin).
+
+#### 1. Nhóm chức năng Công cộng (Public)
+- **Trang chủ & Giới thiệu:** Xem thông tin tổng quan (`/`).
+- **Danh sách khóa học & Chi tiết khóa học:** Cho phép người dùng hoặc khách xem các khóa học đang có (`/courses`, `/course/{id}`).
+- **Vấn đề giải quyết:** Đóng vai trò như một trang web giới thiệu, tiếp cận khách hàng tiềm năng và cung cấp thông tin khóa học công khai.
+
+#### 2. Nhóm chức năng Xác thực & Quản lý Người dùng (Authentication & Profile)
+- **Đăng nhập, Đăng ký, Đăng xuất:** Quản lý quyền truy cập.
+- **Xác thực OTP:** Gửi, xác minh và gửi lại mã OTP (`/otp`).
+- **Quản lý Hồ sơ cá nhân:** Xem và cập nhật thông tin cá nhân (`/profile`).
+- **Vấn đề giải quyết:** Đảm bảo bảo mật tài khoản, xác thực danh tính người dùng một cách chặt chẽ (đặc biệt qua OTP để chống tài khoản ảo) và cá nhân hóa thông tin liên hệ.
+
+#### 3. Nhóm chức năng dành cho Học viên (Student Role)
+- **Đăng ký khóa học:** Cho phép học viên ghi danh vào một khóa học mong muốn (`/registration/{id}`).
+- **Khóa học của tôi:** Xem lịch sử các khóa học đã và đang học (`/my-courses`).
+- **Tiến trình học tập & Điểm số:** Học viên theo dõi điểm số, tình trạng điểm danh của mình (`/my-grades`).
+- **Hỗ trợ & Trò chuyện:** Gửi yêu cầu hỗ trợ, chat trực tiếp với trung tâm (`/support/chat`).
+- **Đánh giá (Feedback):** Viết đánh giá chất lượng cho lớp học/khóa học (`/feedback`).
+- **Vấn đề giải quyết:** Cung cấp cổng thông tin tự phục vụ (self-service) cho học viên. Tự động hóa quy trình theo dõi học tập, từ đăng ký đến xem điểm số, giúp tăng tính minh bạch và sự hài lòng của học viên.
+
+#### 4. Nhóm chức năng dành cho Giáo viên (Teacher Role)
+- **Xem Lịch giảng dạy:** Theo dõi thời khóa biểu lớp học mà giáo viên được phân công (`/teacher/schedule`).
+- **Quản lý Điểm & Điểm danh:** Xem, đánh giá điểm số và điểm danh các học viên trong lớp mình phụ trách (`/teacher/grades-attendance`).
+- **Vấn đề giải quyết:** Cung cấp công cụ số hóa để giáo viên quản lý lớp học dễ dàng, giảm tải giấy tờ thủ công, đảm bảo thông tin điểm số/điểm danh được cập nhật kịp thời lên hệ thống chung.
+
+#### 5. Nhóm chức năng Nghiệp vụ (Dành cho Consultant & Admin)
+- **Dashboard Tổng quan:** Xem các số liệu thống kê vận hành.
+- **Quản lý Thanh toán (Payments):** Xem, tạo mới, xác nhận chi tiết thanh toán và xuất file dữ liệu giao dịch ra CSV. Tư vấn viên có thể xác nhận phí, Admin có quyền quản lý toàn diện.
+- **Quản lý Ghi danh (Registrations):** Xem, chỉnh sửa, phê duyệt hoặc xóa các yêu cầu đăng ký khóa học từ phía học viên.
+- **Trung tâm Hỗ trợ (Help Center):** Tiếp nhận và xử lý các yêu cầu, tin nhắn hỗ trợ từ phía học viên.
+- **Vấn đề giải quyết:** Số hóa quy trình vận hành văn phòng trung tâm, đặc biệt là theo dõi dòng tiền (thanh toán học phí) và quản lý quy trình nhập học (ghi danh), giúp nhân viên Tư vấn làm việc hiệu quả hơn.
+
+#### 6. Nhóm chức năng Đặc quyền Quản trị hệ thống (Admin Role)
+- **Quản lý Khóa học (Courses) & Lớp học (Classes):** Thực hiện đầy đủ các thao tác CRUD (Thêm, Sửa, Xóa). 
+  - *Đặc biệt với Lớp học:* Có tính năng lọc giáo viên/học viên đang trống lịch, **tự động sắp xếp lớp (Auto-arrange)** và xuất danh sách lớp ra file Excel.
+- **Quản lý Nhân sự & Khách hàng:** Quản lý toàn bộ danh sách Giáo viên (`/teachers`) và Học viên (`/students`).
+- **Quản lý Tiến trình Học tập Tổng:** Can thiệp và quản lý bảng điểm, tiến độ của toàn bộ hệ thống (`/learning-progress`).
+- **Marketing (Tiếp thị):** Quản lý các chiến dịch quảng cáo, khuyến mãi. Đặc biệt có tính năng **Broadcast** (phát sóng) tin nhắn/email hàng loạt tới nhóm đối tượng tiềm năng.
+- **Quản lý Dữ liệu Hỗ trợ:** Quản lý, bật/tắt (toggle) các dữ liệu cho Help Center (có thể là mẫu câu trả lời, FAQ hoặc training data cho chatbot hỗ trợ).
+- **Vấn đề giải quyết:** Cấp quyền kiểm soát toàn diện mọi mặt tài nguyên của trung tâm (nhân sự, khóa học, dữ liệu hệ thống). Các công cụ tự động hóa như "Tự động xếp lớp" (Auto-arrange) hay "Broadcast Marketing" giúp quản lý cấp cao tối ưu hóa nguồn lực và tăng doanh thu.
