@@ -131,6 +131,28 @@ class ClassesController extends Controller
                 ->update(['classid' => $class->classid]);
         }
 
+        // --- Gửi thông báo ---
+        // Cho Giáo viên
+        $teacher = Teacher::with('user')->find($request->teacherid);
+        if ($teacher && $teacher->user) {
+            \Illuminate\Support\Facades\Notification::send($teacher->user, new \App\Notifications\SystemNotification([
+                'title' => 'Lịch dạy mới',
+                'message' => 'Bạn vừa được phân công dạy lớp: ' . $request->classname,
+                'type' => 'info',
+                'action_by' => auth()->user()->email ?? 'Hệ thống'
+            ]));
+        }
+
+        // Cho Admin CRUD
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Thêm Lớp học',
+            'message' => 'Lớp học "' . $request->classname . '" vừa được thêm.',
+            'type' => 'success',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.classes.index')
+        ]));
+
         return redirect()->route('admin.classes.index')->with('success', 'Class created successfully.');
     }
 
@@ -201,6 +223,16 @@ class ClassesController extends Controller
                 ->update(['classid' => $id]);
         }
 
+        // --- Gửi thông báo cho Admin CRUD ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật Lớp học',
+            'message' => 'Lớp học "' . $request->classname . '" vừa được cập nhật.',
+            'type' => 'warning',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.classes.index')
+        ]));
+
         return redirect()->route('admin.classes.index')->with('success', 'Cập nhật thông tin lớp học thành công.');
     }
 
@@ -211,8 +243,19 @@ class ClassesController extends Controller
         // Trả học sinh về trạng thái chưa xếp lớp
         RegistrationCourse::where('classid', $id)->update(['classid' => null]);
         
+        $className = $class->classname;
         // Xóa lớp
         $class->delete();
+
+        // --- Gửi thông báo cho Admin CRUD ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Xóa Lớp học',
+            'message' => 'Lớp học "' . $className . '" đã bị xóa.',
+            'type' => 'danger',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.classes.index')
+        ]));
 
         return redirect()->route('admin.classes.index')->with('success', 'Xóa lớp học thành công.');
     }

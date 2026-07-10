@@ -55,6 +55,10 @@
                 </a>
 
                 @if(auth()->user()->role == 'admin')
+                <a class="flex items-center {{ request()->routeIs('admin.users.*') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{ route('admin.users.index') }}">
+                    <span class="material-symbols-outlined mr-3">manage_accounts</span>
+                    <span class="font-body text-label-medium">Người dùng</span>
+                </a>
                 <a class="flex items-center {{ request()->routeIs('admin.courses*') ? 'bg-primary/10 text-primary' : 'text-on-surface-variant' }} px-4 py-3 mx-2 hover:bg-primary/5 rounded-xl transition-all active:scale-95" href="{{ route('admin.courses') }}">
                     <span class="material-symbols-outlined mr-3">menu_book</span>
                     <span class="font-body text-label-medium">Khóa học</span>
@@ -101,7 +105,30 @@
                 </a>
             </nav>
 
-            <div class="mt-auto pt-4 border-t border-outline-variant">
+            <div class="mt-auto pt-4 border-t border-outline-variant relative" id="sidebar-notif-container">
+                <!-- Notifications button -->
+                <button onclick="toggleNotifications()" class="w-full flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl transition-all text-left">
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined mr-3">notifications</span>
+                        <span id="notif-badge" class="absolute -top-1 right-2 w-4 h-4 bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+                    </div>
+                    <span class="font-body text-label-medium">Thông báo</span>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="notif-menu" class="absolute left-full bottom-0 ml-2 w-80 md:w-96 bg-surface border border-outline-variant rounded-2xl shadow-xl hidden flex-col overflow-hidden max-h-[400px] z-50">
+                    <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low sticky top-0">
+                        <h3 class="font-bold text-on-surface">Thông báo</h3>
+                        <button onclick="markAllAsRead()" class="text-xs text-primary hover:underline font-medium">Đánh dấu tất cả đã đọc</button>
+                    </div>
+                    <div id="notif-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+                        <div class="p-4 text-center text-sm text-on-surface-variant">Đang tải...</div>
+                    </div>
+                    <div class="p-3 border-t border-outline-variant bg-surface-container-lowest text-center sticky bottom-0">
+                        <a href="{{ route('notifications.index') }}" class="text-sm font-bold text-primary hover:underline">Xem tất cả thông báo</a>
+                    </div>
+                </div>
+
                 <a class="flex items-center text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high rounded-xl" href="/">
                     <span class="material-symbols-outlined mr-3">home</span>
                     <span class="font-body text-label-medium">Xem Trang chủ</span>
@@ -117,11 +144,120 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-grow lg:ml-64 min-w-0 bg-surface">
+        <main class="flex-grow lg:ml-64 min-w-0 bg-surface relative">
+
             @yield('contentdashboard')
         </main>
     </div>
 
+    <script>
+        // --- Notification System ---
+        let notifMenu = document.getElementById('notif-menu');
+        let notifBadge = document.getElementById('notif-badge');
+        let notifList = document.getElementById('notif-list');
+
+        function toggleNotifications() {
+            notifMenu.classList.toggle('hidden');
+            notifMenu.classList.toggle('flex');
+            if (!notifMenu.classList.contains('hidden')) {
+                fetchNotifications();
+            }
+        }
+
+        // Đóng menu khi click ra ngoài
+        document.addEventListener('click', function(event) {
+            const isClickInside = event.target.closest('#sidebar-notif-container');
+            if (!isClickInside && !notifMenu.classList.contains('hidden')) {
+                notifMenu.classList.add('hidden');
+                notifMenu.classList.remove('flex');
+            }
+        });
+
+        function fetchNotifications() {
+            fetch('/api/notifications/unread')
+                .then(res => res.json())
+                .then(data => {
+                    // Update badge
+                    if (data.count > 0) {
+                        notifBadge.textContent = data.count > 99 ? '99+' : data.count;
+                        notifBadge.classList.remove('hidden');
+                    } else {
+                        notifBadge.classList.add('hidden');
+                    }
+
+                    // Render list
+                    if (data.notifications.length === 0) {
+                        notifList.innerHTML = '<div class="p-4 text-center text-sm text-on-surface-variant">Không có thông báo mới</div>';
+                        return;
+                    }
+
+                    let html = '';
+                    data.notifications.forEach(n => {
+                        let dataObj = n.data;
+                        
+                        // Màu sắc cho Admin CRUD
+                        let dotColor = 'bg-primary';
+                        if (dataObj.type === 'success') dotColor = 'bg-green-500';
+                        if (dataObj.type === 'danger') dotColor = 'bg-error';
+                        if (dataObj.type === 'warning') dotColor = 'bg-orange-500';
+
+                        let actionByHtml = dataObj.action_by ? `<p class="text-[10px] text-on-surface-variant mt-1">Bởi: ${dataObj.action_by}</p>` : '';
+
+                        html += `
+                            <div class="p-3 hover:bg-surface-container-high rounded-xl cursor-pointer transition-colors relative" onclick="markAsRead('${n.id}', '${dataObj.link || '#'}')">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-3 h-3 mt-1.5 rounded-full flex-shrink-0 ${dotColor}"></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-on-surface">${dataObj.title}</p>
+                                        <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-2">${dataObj.message}</p>
+                                        ${actionByHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    notifList.innerHTML = html;
+                })
+                .catch(err => console.error(err));
+        }
+
+        function markAsRead(id, link) {
+            fetch(`/api/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }).then(() => {
+                if (link && link !== '#') {
+                    window.location.href = link;
+                } else {
+                    fetchNotifications();
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            fetch('/api/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }).then(() => {
+                fetchNotifications();
+                notifMenu.classList.add('hidden');
+                notifMenu.classList.remove('flex');
+            });
+        }
+
+        // Polling every 15 seconds
+        setInterval(fetchNotifications, 15000);
+        
+        // Initial fetch
+        document.addEventListener('DOMContentLoaded', fetchNotifications);
+    </script>
+    
     @stack('scripts')
 </body>
 

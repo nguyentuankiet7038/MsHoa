@@ -82,7 +82,7 @@
                     <p class="text-sm text-on-surface-variant text-center py-8">Không tìm thấy hoạt động gần đây nào.</p>
                     @endforelse
                 </div>
-                <button class="mt-6 text-primary text-sm font-bold hover:underline">Xem tất cả hoạt động</button>
+                <a href="{{ route('notifications.index') }}" class="mt-6 text-primary text-sm font-bold hover:underline inline-block text-center w-full">Xem tất cả hoạt động</a>
             </div>
         </div>
         <!-- Custom Bento Section: Top Teachers / Featured Courses -->

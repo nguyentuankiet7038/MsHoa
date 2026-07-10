@@ -29,9 +29,21 @@ class AuthController extends Controller
 
         //dùng Auth::attemp để so sanh database
         if (Auth::attempt($credentials)) {
-           
+            
+            // Kiểm tra xem tài khoản có bị khóa không
+            if (Auth::user()->is_locked) {
+                Auth::logout();
+                return back()->withErrors([
+                    'err' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.'
+                ])->onlyInput('email');
+            }
+
             // Đăng nhập thành công tạo sesion chuyển hướng
             $request->session()->regenerate();
+            
+            if (Auth::user()->role === 'admin' || Auth::user()->role === 'consultant') {
+                return redirect()->intended('/dashboard')->with('success', 'Đăng nhập thành công');
+            }
             
             return redirect()->intended('/')->with('success', 'Đăng nhập thành công');
            

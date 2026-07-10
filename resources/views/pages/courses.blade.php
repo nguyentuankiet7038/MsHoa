@@ -11,7 +11,7 @@
         </div>
         <div class="max-w-7xl mx-auto text-center relative z-10">
             <h1 class="text-4xl md:text-6xl font-headline font-black text-on-primary-fixed leading-tight mb-6">
-                Khám phá các khóa học tại <span class="text-primary">Ms. Hoa English</span>
+                Khám phá các khóa học tại <span class="text-primary">Ms Hoa English</span>
             </h1>
             <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10">
                 Chương trình đào tạo tiếng Anh chuẩn quốc tế, giúp bạn chinh phục mọi mục tiêu sự nghiệp và học tập.
@@ -39,7 +39,7 @@
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 scrollbar-hide">
                 @php $currentCat = request('category', 'Tất cả'); @endphp
-                @foreach(['Tất cả', 'TOEIC', 'IELTS', 'Giao tiếp', 'Tiếng Anh trẻ em'] as $cat)
+                @foreach(['Tất cả', 'TOEIC', 'IELTS'] as $cat)
                 <a href="{{ request()->fullUrlWithQuery(['category' => $cat, 'page' => null]) }}" 
                    class="whitespace-nowrap px-6 py-2 rounded-full {{ $currentCat == $cat ? 'bg-primary text-on-primary font-bold' : 'bg-surface-container-high text-on-surface-variant font-medium hover:bg-primary-container hover:text-on-primary-container' }} text-sm transition-colors">
                     {{ $cat }}

@@ -37,7 +37,29 @@ class CourseController extends Controller
 
     public function show($id) {
         $course = Course::findOrFail($id);
-        return view('pages.course-detail', compact('course'));
+        $firstClass = \App\Models\Classes::where('courseid', $id)->first();
+        
+        $duration = 'Chưa sắp lớp';
+        $schedule = 'Chưa sắp lớp';
+        
+        if ($firstClass) {
+            $schedule = $firstClass->schedule ?? 'Chưa sắp lớp';
+            if ($firstClass->start_date && $firstClass->end_date) {
+                $start = \Carbon\Carbon::parse($firstClass->start_date);
+                $end = \Carbon\Carbon::parse($firstClass->end_date);
+                $weeks = $start->diffInWeeks($end);
+                $duration = $weeks > 0 ? $weeks . ' Tuần' : 'Chưa sắp lớp';
+            }
+        }
+        
+        $feedbacks = \App\Models\Feedback::with('student')
+            ->where('courseid', $id)
+            ->orderBy('ratingscore', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get();
+        
+        return view('pages.course-detail', compact('course', 'duration', 'schedule', 'feedbacks'));
     }
 
     public function admincourses(Request $request) {
@@ -95,6 +117,16 @@ class CourseController extends Controller
 
         Course::create($data);
 
+        // --- Gửi thông báo cho Admin ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Khóa học mới',
+            'message' => 'Khóa học "' . $data['coursename'] . '" vừa được thêm.',
+            'type' => 'success',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.courses')
+        ]));
+
         return redirect()->route('admin.courses')->with('success', 'Course created successfully.');
     }
 
@@ -125,12 +157,33 @@ class CourseController extends Controller
 
         $course->update($data);
 
+        // --- Gửi thông báo cho Admin ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật Khóa học',
+            'message' => 'Khóa học "' . $course->coursename . '" vừa được sửa.',
+            'type' => 'warning',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.courses')
+        ]));
+
         return redirect()->route('admin.courses')->with('success', 'Course updated successfully.');
     }
 
     public function destroy($id) {
         $course = Course::findOrFail($id);
+        $courseName = $course->coursename;
         $course->delete();
+
+        // --- Gửi thông báo cho Admin ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Xóa Khóa học',
+            'message' => 'Khóa học "' . $courseName . '" đã bị xóa.',
+            'type' => 'danger',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.courses')
+        ]));
 
         return redirect()->route('admin.courses')->with('success', 'Course deleted successfully.');
     }

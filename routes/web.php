@@ -38,10 +38,20 @@ Route::get('/otp', [\App\Http\Controllers\OtpController::class, 'show'])->name('
 Route::post('/otp/verify', [\App\Http\Controllers\OtpController::class, 'verify'])->name('otp.verify');
 Route::post('/otp/resend', [\App\Http\Controllers\OtpController::class, 'resend'])->name('otp.resend');
 
+// --- SOCIAL LOGIN ROUTES ---
+Route::get('/auth/google', [\App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [\App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    
+    // Notifications
+    Route::get('/api/notifications/unread', [\App\Http\Controllers\NotificationController::class, 'getUnread'])->name('notifications.unread');
+    Route::post('/api/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/api/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
 });
 
 // --- STUDENT ROUTES ---
@@ -92,6 +102,17 @@ Route::middleware(['auth', 'role:admin,consultant'])->prefix('dashboard')->group
 
     // --- ADMIN ONLY WITHIN DASHBOARD ---
     Route::middleware(['role:admin'])->group(function () {
+        
+        // Users Management
+        Route::prefix('users')->group(function () {
+            Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');
+            Route::get('/create', [\App\Http\Controllers\UserController::class, 'create'])->name('admin.users.create');
+            Route::post('/', [\App\Http\Controllers\UserController::class, 'store'])->name('admin.users.store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\UserController::class, 'edit'])->name('admin.users.edit');
+            Route::put('/{id}', [\App\Http\Controllers\UserController::class, 'update'])->name('admin.users.update');
+            Route::delete('/{id}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('admin.users.destroy');
+        });
+
         // Courses
         Route::prefix('courses')->group(function () {
             Route::get('/', [CourseController::class, 'admincourses'])->name('admin.courses');

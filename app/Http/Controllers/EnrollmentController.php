@@ -77,6 +77,26 @@ class EnrollmentController extends Controller
             'status' => 'pending'
         ]);
 
+        // --- Gửi thông báo ---
+        // Cho Học viên
+        \Illuminate\Support\Facades\Notification::send($user, new \App\Notifications\SystemNotification([
+            'title' => 'Đăng ký thành công',
+            'message' => 'Bạn đã đăng ký khóa học thành công. Vui lòng chờ trung tâm xác nhận.',
+            'type' => 'success',
+            'action_by' => 'Hệ thống'
+        ]));
+
+        // Cho Tư vấn viên & Admin
+        $staffs = \App\Models\User::whereIn('role', ['consultant', 'admin'])->get();
+        $courseName = \App\Models\Course::find($request->course_id)->coursename ?? 'Khóa học mới';
+        \Illuminate\Support\Facades\Notification::send($staffs, new \App\Notifications\SystemNotification([
+            'title' => 'Đơn đăng ký mới',
+            'message' => 'Học viên ' . $request->student_name . ' vừa đặt khóa học: ' . $courseName,
+            'type' => 'info',
+            'action_by' => $user->email,
+            'link' => route('admin.registrations.index')
+        ]));
+
         return redirect()->back()->with('success', 'Đăng ký thành công! Vui lòng chờ trung tâm xác nhận và xếp lớp.');
     }
 
@@ -92,9 +112,60 @@ class EnrollmentController extends Controller
             'status' => 'required|in:pending,approved,rejected,canceled'
         ]);
 
-        $registration = RegistrationCourse::findOrFail($id);
+        $registration = RegistrationCourse::with(['student.user', 'course'])->findOrFail($id);
+        $oldStatus = $registration->status;
         $registration->status = $request->status;
         $registration->save();
+
+        // --- Gửi thông báo khi thay đổi trạng thái ---
+        if ($oldStatus !== $request->status && $registration->student && $registration->student->user) {
+            $studentUser = $registration->student->user;
+            $courseName = $registration->course ? $registration->course->coursename : 'khóa học';
+            
+            if ($request->status === 'approved') {
+                // Báo cho Học viên
+                \Illuminate\Support\Facades\Notification::send($studentUser, new \App\Notifications\SystemNotification([
+                    'title' => 'Xác nhận khóa học',
+                    'message' => 'Đơn đăng ký ' . $courseName . ' của bạn đã được xác nhận thành công!',
+                    'type' => 'success',
+                    'action_by' => auth()->user()->email ?? 'Tư vấn viên'
+                ]));
+                // Báo lại cho Consultant (Activity Log)
+                $consultants = \App\Models\User::where('role', 'consultant')->get();
+                \Illuminate\Support\Facades\Notification::send($consultants, new \App\Notifications\SystemNotification([
+                    'title' => 'Đã xác nhận đơn',
+                    'message' => 'Đã xác nhận đơn đăng ký ' . $courseName . ' của học viên ' . $registration->student->studentname,
+                    'type' => 'success',
+                    'action_by' => auth()->user()->email ?? 'Hệ thống'
+                ]));
+            } elseif ($request->status === 'rejected') {
+                // Báo cho Học viên
+                \Illuminate\Support\Facades\Notification::send($studentUser, new \App\Notifications\SystemNotification([
+                    'title' => 'Từ chối đăng ký',
+                    'message' => 'Đơn đăng ký ' . $courseName . ' của bạn đã bị từ chối. Vui lòng liên hệ để biết thêm chi tiết.',
+                    'type' => 'danger',
+                    'action_by' => auth()->user()->email ?? 'Tư vấn viên'
+                ]));
+                // Báo lại cho Consultant (Activity Log)
+                $consultants = \App\Models\User::where('role', 'consultant')->get();
+                \Illuminate\Support\Facades\Notification::send($consultants, new \App\Notifications\SystemNotification([
+                    'title' => 'Đã từ chối đơn',
+                    'message' => 'Đã từ chối đơn đăng ký ' . $courseName . ' của học viên ' . $registration->student->studentname,
+                    'type' => 'warning',
+                    'action_by' => auth()->user()->email ?? 'Hệ thống'
+                ]));
+            }
+        }
+
+        // --- Gửi thông báo cho Admin CRUD ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật Đơn đăng ký',
+            'message' => 'Đơn đăng ký của ' . ($registration->student->studentname ?? 'Học viên') . ' vừa được cập nhật.',
+            'type' => 'warning',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.registrations.index')
+        ]));
 
         return redirect()->route('admin.registrations.index')->with('success', 'Registration updated successfully.');
     }
@@ -103,6 +174,16 @@ class EnrollmentController extends Controller
     {
         $registration = RegistrationCourse::findOrFail($id);
         $registration->delete();
+
+        // --- Gửi thông báo cho Admin CRUD ---
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Xóa Đơn đăng ký',
+            'message' => 'Một đơn đăng ký đã bị xóa khỏi hệ thống.',
+            'type' => 'danger',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('admin.registrations.index')
+        ]));
 
         return redirect()->route('admin.registrations.index')->with('success', 'Registration deleted successfully.');
     }

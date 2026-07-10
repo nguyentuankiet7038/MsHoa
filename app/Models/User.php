@@ -26,6 +26,8 @@ class User extends Authenticatable
         'role',
         'phone',
         'notes',
+        'google_id',
+        'is_locked',
     ];
 
     /**

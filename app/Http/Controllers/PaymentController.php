@@ -50,7 +50,29 @@ class PaymentController extends Controller
             'status' => 'required|in:Success,failed,pending',
         ]);
 
-        Payment::create($request->all());
+        $payment = Payment::create($request->all());
+
+        // --- Gửi thông báo ---
+        $registration = RegistrationCourse::with('student.user')->find($request->registrationid);
+        if ($registration && $registration->student && $registration->student->user) {
+            // Cho học viên
+            \Illuminate\Support\Facades\Notification::send($registration->student->user, new \App\Notifications\SystemNotification([
+                'title' => 'Thông tin thanh toán',
+                'message' => 'Bạn có một hóa đơn mới với số tiền ' . number_format($request->amount) . ' VNĐ. Trạng thái: ' . $request->status,
+                'type' => 'info',
+                'action_by' => auth()->user()->email ?? 'Hệ thống'
+            ]));
+        }
+
+        // Cho Admin CRUD
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Thêm Hóa đơn',
+            'message' => 'Hóa đơn thanh toán mới đã được tạo.',
+            'type' => 'success',
+            'action_by' => auth()->user()->email ?? 'Hệ thống',
+            'link' => route('payment.admin')
+        ]));
 
         return redirect()->route('payment.admin')->with('success', 'Hóa đơn đã được tạo thành công.');
     }

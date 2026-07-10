@@ -4,20 +4,35 @@
 
 <main class="support-page max-w-[1440px] mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-140px)]">
     <!-- Left Column: Support Interface (Bento Style) -->
-    <div class="lg:col-span-8 ">
-        <!-- Hero Header Section -->
-        <section class="bg-primary-container text-on-primary-container p-8 rounded-xl relative overflow-hidden h-full">
-            <div class="relative z-10 max-w-xl">
-                <h1 class="text-3xl md:text-4xl font-black font-headline mb-4">Chúng tôi có thể giúp gì cho hành trình học tập của bạn?</h1>
-                <p class="text-lg opacity-90 mb-6">Đội ngũ hỗ trợ của chúng tôi sẵn sàng 24/7 để giúp bạn chọn khóa học, xử lý các sự cố kỹ thuật hoặc giải đáp các thắc mắc chung về chương trình học.</p>
-                
-            </div>
-            <div class="absolute right-0 bottom-0 top-0 w-3/3 hidden md:block">
-                <img class="h-full w-full object-cover opacity-100" data-alt="Một phụ nữ trẻ người châu Á mỉm cười chuyên nghiệp, đeo tai nghe và mặc trang phục công sở hiện đại. Cô ấy đang ngồi trong một môi trường văn phòng đương đại rực rỡ ánh sáng với cây xanh mờ ảo ở phía sau. Ánh sáng ấm áp và chào đón, phản ánh bầu không khí dịch vụ hỗ trợ thân thiện và sạch sẽ với các tông màu trắng và điểm nhấn hoa oải hương mềm mại." src="https://st.ielts-fighter.com/crop/mshoajunior-image/250x350/2024/07/25/e23bfaf5-2df5-4b87-8b12-f1398de2d368.png" />
-            </div>
-        </section>
-       
-    </div>
+    <div class="lg:col-span-8">
+    <section class="relative h-[600px] overflow-hidden rounded-xl">
+
+        <!-- Video nền -->
+        <iframe
+            class="absolute inset-0 w-full h-full"
+            src="https://www.youtube.com/embed/bsGAk7seAB8?autoplay=1&mute=1&loop=1&playlist=bsGAk7seAB8&controls=0&rel=0"
+            title="YouTube video"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+        </iframe>
+
+        <!-- Lớp phủ tối -->
+        <!-- <div class="absolute inset-0 bg-black/50"></div> -->
+
+        <!-- Nội dung -->
+        <!-- <div class="relative z-10 p-8 text-white max-w-xl">
+            <h1 class="text-4xl font-bold mb-4">
+                Chúng tôi có thể giúp gì cho hành trình học tập của bạn?
+            </h1>
+
+            <p class="text-lg">
+                Đội ngũ hỗ trợ của chúng tôi sẵn sàng 24/7...
+            </p>
+        </div> -->
+
+    </section>
+</div>
     <!-- Right Column: Live Chat Interface -->
     <div class="lg:col-span-4">
         <div class="bg-white rounded-xl shadow-xl border border-outline-variant flex flex-col overflow-hidden sticky top-24 h-[600px]">
@@ -29,8 +44,8 @@
                         <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>
                     <div>
-                        <p class="font-bold leading-tight">Sarah từ bộ phận Hỗ trợ</p>
-                        <p class="text-xs opacity-80">Đang trực tuyến | Phản hồi trong < 2 phút</p>
+                        <p class="font-bold leading-tight">Bộ phận Hỗ trợ</p>
+                        <p class="text-xs opacity-80"> Phản hồi trong < 2 phút</p>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -40,36 +55,6 @@
             </div>
             <!-- Chat Messages Area -->
             <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-container-lowest">
-                <div class="text-center">
-                    <span class="text-[10px] text-outline font-bold uppercase tracking-widest bg-surface-container px-3 py-1 rounded-full">Hôm nay</span>
-                </div>
-                <!-- Agent Message -->
-                <div class="flex gap-2 max-w-[85%]">
-                    <div class="flex-shrink-0">
-                        <img class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3cOlqIHyWQLQuP2hqvHSPXUlA15EUYKtL4c-LNj3vBTgQQdEXnzX8OCjk6B4HVQot57YtVbhPWYQqe2rBgMJ04pyeOuo1j09PepzhsWxbUiIgFpXiaa16OH9Zht4SaAXOzKNVw9tiR4bv76Bi4MMipg18Gdzbdz-4P_KmlImADyfVutNgzzz7LOg0qpDAzRZNe3d1pZPN9jEeVsRzs9yk8N7uaYjvmIQ0fKnWiAXVr6AwnskC9f7L3LyZKNIl7gm71D-MavCnlLM" />
-                    </div>
-                    <div class="bg-surface-container p-3 rounded-2xl rounded-tl-none text-sm text-on-surface">
-                        Chào bạn! Tôi là Sarah. Tôi có thể hỗ trợ gì cho hành trình học tiếng Anh của bạn hôm nay?
-                        <span class="block text-[10px] text-outline mt-1">14:02</span>
-                    </div>
-                </div>
-                <!-- User Message -->
-                <div class="flex flex-row-reverse gap-2 max-w-[85%] ml-auto">
-                    <div class="support-bg-accent p-3 rounded-2xl rounded-tr-none text-sm text-white">
-                        Chào bạn! Tôi quan tâm đến khóa học IELTS Mastery. Bạn có thể cho tôi biết ngày khai giảng tiếp theo không?
-                        <span class="block text-[10px] opacity-70 mt-1 text-right">14:05</span>
-                    </div>
-                </div>
-                <!-- Agent Message -->
-                <div class="flex gap-2 max-w-[85%]">
-                    <div class="flex-shrink-0">
-                        <img class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHh8yU66GJmH03ZsnkiTF99A0_QGhVdG-ToLjRsyt-bY12bhXeTEmbKpr4f0d9-sAZQ-D6T7KDTUX9J1e7nHGqBTzeCq9CRqU6pRSOrzbXw196piKl4CXmjn2XYLQpOgp2mYZ_oYw_JrxN_qdFf_XMG2yYg-NOIikzDJOG6iqdvIVHrq8pNQvU65XS1djm-7plOUjQsnBl8grOt_nO5tAVMhWrsRmcNAFVjLd_cBgdznTogwsVQ9rpKkpEZf-ctu143N7ikO9KSjc" />
-                    </div>
-                    <div class="bg-surface-container p-3 rounded-2xl rounded-tl-none text-sm text-on-surface">
-                        Tất nhiên rồi! Khóa IELTS Mastery tiếp theo sẽ khai giảng vào Thứ Hai, ngày 14 tháng 10. Chúng tôi có cả lớp sáng và lớp tối.
-                        <span class="block text-[10px] text-outline mt-1">14:06</span>
-                    </div>
-                </div>
                 <!-- Typing Indicator -->
                 <div class="flex gap-2 items-center text-outline italic text-xs">
                     <div class="flex gap-1">
@@ -88,10 +73,10 @@
                         <span class="material-symbols-outlined">send</span>
                     </button>
                 </div>
-                <div class="mt-2 flex gap-4 text-[10px] text-outline justify-center font-medium">
+                <!-- <div class="mt-2 flex gap-4 text-[10px] text-outline justify-center font-medium">
                     <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">security</span> Được mã hóa</span>
                     <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">bolt</span> Phản hồi nhanh</span>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

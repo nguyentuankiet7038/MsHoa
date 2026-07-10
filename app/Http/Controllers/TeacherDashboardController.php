@@ -116,6 +116,26 @@ class TeacherDashboardController extends Controller
             }
         }
 
+        // --- Gửi thông báo ---
+        // Cho Giáo viên
+        \Illuminate\Support\Facades\Notification::send(auth()->user(), new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật thành công',
+            'message' => 'Đã cập nhật điểm và điểm danh cho lớp ' . $class->classname . ' thành công.',
+            'type' => 'success',
+            'action_by' => 'Hệ thống',
+            'link' => route('teacher.grades_attendance') . '?classid=' . $class->classid
+        ]));
+
+        // Cho Admin CRUD
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật Điểm số',
+            'message' => 'Giáo viên ' . auth()->user()->email . ' vừa cập nhật điểm lớp ' . $class->classname,
+            'type' => 'info',
+            'action_by' => auth()->user()->email,
+            'link' => route('admin.learning-progress.index')
+        ]));
+
         return redirect()->back()->with('success', 'Cập nhật thành công. (Chỉ những bản ghi không bị khóa mới được cập nhật)');
     }
 }

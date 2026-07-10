@@ -61,37 +61,39 @@ class PageController extends Controller
             $data[] = $found ? $found->count : 0;
         }
 
-        // Hoạt động gần đây
-        $recentRegistrations = RegistrationCourse::with('student')
+        // Hoạt động gần đây lấy từ bảng Notifications của người dùng hiện tại
+        $activities = auth()->check() ? auth()->user()->notifications()
             ->orderBy('created_at', 'desc')
-            ->take(3)
+            ->take(5)
             ->get()
-            ->map(function($reg) {
-                return [
-                    'type' => 'registration',
-                    'title' => 'New student registration',
-                    'desc' => ($reg->student->fullname ?? 'Unknown') . ' registered for a course',
-                    'time' => $reg->created_at->diffForHumans(),
-                    'icon' => 'person_add',
-                    'color' => 'secondary'
+            ->map(function($notif) {
+                $type = $notif->data['type'] ?? 'info';
+                
+                // Ánh xạ màu sắc sang các class bento UI có sẵn (primary, secondary, tertiary, error)
+                $colorMap = [
+                    'success' => 'secondary',
+                    'danger' => 'error',
+                    'warning' => 'tertiary',
+                    'info' => 'primary'
                 ];
-            });
-
-        $recentPayments = Payment::orderBy('created_at', 'desc')
-            ->take(2)
-            ->get()
-            ->map(function($pay) {
-                return [
-                    'type' => 'payment',
-                    'title' => 'Payment received',
-                    'desc' => 'Invoice #' . $pay->paymentid . ' confirmed',
-                    'time' => $pay->created_at->diffForHumans(),
-                    'icon' => 'payments',
-                    'color' => 'tertiary'
+                
+                // Ánh xạ icon
+                $iconMap = [
+                    'success' => 'check_circle',
+                    'danger' => 'delete',
+                    'warning' => 'edit',
+                    'info' => 'notifications'
                 ];
-            });
 
-        $activities = $recentRegistrations->concat($recentPayments)->sortByDesc('time')->values();
+                return [
+                    'type' => 'notification',
+                    'title' => $notif->data['title'] ?? 'Thông báo',
+                    'desc' => $notif->data['message'] ?? '',
+                    'time' => $notif->created_at->diffForHumans(),
+                    'icon' => $iconMap[$type] ?? 'notifications',
+                    'color' => $colorMap[$type] ?? 'primary'
+                ];
+            }) : collect();
 
         return view('admin.index', compact(
             'totalStudents', 

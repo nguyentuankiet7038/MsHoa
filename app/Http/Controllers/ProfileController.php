@@ -48,7 +48,7 @@ class ProfileController extends Controller
         $validated = $request->validate($rules);
 
         // Update User info
-        $user->fullname = $validated['fullname'];
+        $user->email = $validated['fullname'];
         $user->phone = $validated['phone'] ?? $user->phone;
 
         if (!empty($validated['password'])) {
@@ -74,10 +74,19 @@ class ProfileController extends Controller
                 // Create new
                 // Default student name is the same as fullname initially if not provided
                 $studentData['userid'] = $user->userid;
-                $studentData['studentname'] = $user->fullname;
+                $studentData['studentname'] = $user->email;
                 Student::create($studentData);
             }
         }
+
+        // --- Gửi thông báo ---
+        \Illuminate\Support\Facades\Notification::send($user, new \App\Notifications\SystemNotification([
+            'title' => 'Cập nhật thành công',
+            'message' => 'Hồ sơ cá nhân của bạn đã được cập nhật.',
+            'type' => 'success',
+            'action_by' => 'Hệ thống',
+            'link' => route('profile.index')
+        ]));
 
         return redirect()->route('profile.index')->with('success', 'Hồ sơ cá nhân đã được cập nhật thành công!');
     }
